@@ -1,26 +1,18 @@
 {
-  "name": "backend",
+  "name": "server",
   "version": "1.0.0",
-  "description": "hows the water backend",
-  "main": "index.js",
+  "description": "",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/howsthewater/backend.git"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/howsthewater/backend/issues"
-  },
-  "homepage": "https://github.com/howsthewater/backend#readme",
   "dependencies": {
-    "dotenv": "^8.0.0",
-    "express": "^4.17.1"
-  },
-  "devDependencies": {
-    "nodemon": "^1.19.1"
+    "apollo-server-express": "^2.8.1",
+    "core-js": "^3.2.1",
+    "express": "^4.17.1",
+    "graphql": "^14.4.2"
   }
 }
