@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 require('dotenv').config({ path: 'variables.env' });
-const Recipe = require('./models/Recipe.js');
+// const Recipe = require('./models/Recipe.js');
 const User = require('./models/User.js');
 const Location = require('./models/Location.js')
 
@@ -36,7 +36,7 @@ app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }
 app.use('/graphql', bodyParser.json(), graphqlExpress({
     schema,
     context: {
-        Recipe,
+        // Recipe,
         User,
         Location
     }

@@ -43,31 +43,31 @@ type Location {
     BT_FACIL_TYPE: String
 }
 
-type Recipe {
-    name: String!
-    catagory: String!
-    description: String!
-    instructions: String!
-    createdDate: String
-    likes: Int
-    username: String
-}
+
 
 type User {
     username: String! @unique
     password: String!
     email: String!
     joinDate: String
-    favorites: [Recipe]
+    favorites: [Location]
 }
 
 type Query {
     getAllLocations: [Location]
 }
-
-type Mutation {
-    addRecipe(name: String!, description: String!, catagory: String!, instructions: String!, username: String): Recipe
-}
-
 `;
+// type Mutation {
+//     addRecipe(name: String!, description: String!, catagory: String!, instructions: String!, username: String): Recipe
+// }
+
+// type Recipe {
+//     name: String!
+//     catagory: String!
+//     description: String!
+//     instructions: String!
+//     createdDate: String
+//     likes: Int
+//     username: String
+// }
 
