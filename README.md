@@ -1,9 +1,11 @@
 
-# USE FOR TRAINING ONLY - TOOL TO HELP LEARN THE BASICS OF GRAPHQL - NOT TO EVER BE MERGED WITH THE MASTER! 
+# create a file named 'variables.env' in the main directory and add this line:
 
-## MUST INSTAL NODEMON, IT IS NOT REFLECTED IN PACKAGE.JSON BUT NEEDED FOR DEVELOMENT IF RUN AS IS.
+```
+MONGO_URI=mongodb+srv://ant:ant123@cluster0-bse6j.mongodb.net/howsthewater?retryWrites=true&w=majority
+```
 
-
+### Without this file youwill not connect to the database
 
 
 

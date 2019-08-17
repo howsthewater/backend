@@ -1,18 +1,30 @@
 {
-  "name": "server",
+  "name": "react-recipes",
   "version": "1.0.0",
-  "description": "",
+  "description": "A starter for React-Apollo-GraphQL projects",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "server": "nodemon server.js",
+    "client": "cd client && npm start",
+    "dev": "concurrently --names \"server,client\" \"npm run server --silent\" \"npm run client --silent\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server-express": "^2.8.1",
-    "core-js": "^3.2.1",
+    "apollo-server-express": "^1.4.0",
+    "bcrypt": "^2.0.1",
+    "body-parser": "^1.19.0",
+    "concurrently": "^3.6.1",
+    "cors": "^2.8.5",
+    "dotenv": "^5.0.1",
     "express": "^4.17.1",
-    "graphql": "^14.4.2"
+    "graphql": "^0.13.2",
+    "graphql-tools": "^3.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.6.9",
+    "mongoose-float": "^1.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.5"
   }
 }
