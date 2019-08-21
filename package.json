@@ -2,10 +2,11 @@
   "name": "location_query",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon App.js"
+    "server": "nodemon app.js",
+    "client": "cd client && npm start",
+    "dev": "concurrently --names \"app,client\" \"npm run app --silent\" \"npm run client --silent\""
   },
   "author": "",
   "license": "ISC",
