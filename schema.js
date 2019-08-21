@@ -2,7 +2,7 @@ const graphql = require('graphql');
 const {GraphQLObjectType, GraphQLFloat, GraphQLID, GraphQLList, GraphQLString, GraphQLInt} = graphql;
 
 
-const Location = new GraphQLObjectType({
+const LocationType = new GraphQLObjectType({
     name: 'Location',
     fields: () => ({
         ID: {type: GraphQLID},
@@ -51,11 +51,14 @@ const Location = new GraphQLObjectType({
 }) 
 
 
-type User {
-    username: {type: GraphQLString}! @unique
-    password: {type: GraphQLString}!
-    email: {type: GraphQLString}!
-    joinDate: {type: GraphQLString}
-    favorites: [Location]
-}
+const UserType = new GraphQLObjectType({
+    name: 'User',
+    fields: () => ({
+        username: {type: GraphQLString}, 
+        password: {type: GraphQLString},
+        email: {type: GraphQLString},
+        joinDate: {type: GraphQLString},
+        favorites: [Location]
+    })
+}) 
 
