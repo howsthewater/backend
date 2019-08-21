@@ -17,7 +17,7 @@ const Location = new GraphQLObjectType({
         DSABLDACSS: {type: GraphQLString},
         RESTROOMS: {type: GraphQLInt},
         VISTOR_CTR: {type: GraphQLString},
-        DOG_FRIENDLY: {type: GraphQLString},
+        DOG_FRIENDLY: {type: GraphQLString}, 
         EZ4STROLLERS: {type: GraphQLString},
         PCNC_AREA: {type: GraphQLString},
         CAMPGROUND: {type: GraphQLString},
