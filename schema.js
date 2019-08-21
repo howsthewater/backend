@@ -1,64 +1,65 @@
 const graphql = require('graphql');
-const {GraphQLObjectType, GraphQLFloat, GraphQLID, GraphQLList, GraphQLString, GraphQLInt} = graphql;
+const {GraphQLObjectType, GraphQLFloat, GraphQLID, GraphQLList, GraphQLString, GraphQLInt, GraphQLSchema} = graphql;
 
 
-const LocationType = new GraphQLObjectType({
-    name: 'Location',
-    fields: () => ({
-        ID: {type: GraphQLID},
-        DISTRICT: {type: GraphQLString},
-        CountyNum: {type: GraphQLInt},
-        COUNTY: {type: GraphQLString},
-        NameMobileWeb: {type: GraphQLString},
-        LocationMobileWeb: {type: GraphQLString},
-        DescriptionMobileWeb: {type: GraphQLString},
-        PHONE_NMBR: {type: GraphQLString},
-        PARKING: {type: GraphQLString},
-        DSABLDACSS: {type: GraphQLString},
-        RESTROOMS: {type: GraphQLInt},
-        VISTOR_CTR: {type: GraphQLString},
-        DOG_FRIENDLY: {type: GraphQLString}, 
-        EZ4STROLLERS: {type: GraphQLString},
-        PCNC_AREA: {type: GraphQLString},
-        CAMPGROUND: {type: GraphQLString},
-        SNDY_BEACH: {type: GraphQLString},
-        DUNES: {type: GraphQLString},
-        RKY_SHORE: {type: GraphQLInt},
-        BLUFF: {type: GraphQLString},
-        STRS_BEACH: {type: GraphQLString},
-        PTH_BEACH: {type: GraphQLString},
-        BLFTP_TRLS: {type: GraphQLString},
-        BLFTP_PRK: {type: GraphQLString},
-        WLDLFE_VWG: {type: GraphQLString},
-        TIDEPOOL: {type: GraphQLString},
-        VOLLEYBALL: {type: GraphQLInt},
-        FISHING: {type: GraphQLString},
-        BOATING: {type: GraphQLString},
-        LIST_ORDER: {type: GraphQLString},
-        GEOGR_AREA: {type: GraphQLString},
-        LATITUDE: {type: GraphQLFloat},
-        LONGITUDE: {type: GraphQLFloat},
-        Photo_1: {type: GraphQLString},
-        Photo_2: {type: GraphQLString},
-        Photo_3: {type: GraphQLString},
-        Photo_4: {type: GraphQLString},
-        Bch_whlchr: {type: GraphQLString},
-        BIKE_PATH: {type: GraphQLString},
-        BT_FACIL_TYPE: {type: GraphQLString},
-
-    })
-
-}) 
+exports.typeDefs =` 
+    type Location{
+        ID: ${GraphQLID},
+        DISTRICT: ${GraphQLString},
+        CountyNum: ${GraphQLInt},
+        COUNTY:  ${GraphQLString},
+        NameMobileWeb:  ${GraphQLString},
+        LocationMobileWeb:  ${GraphQLString},
+        DescriptionMobileWeb:  ${GraphQLString},
+        PHONE_NMBR:  ${GraphQLString},
+        PARKING:  ${GraphQLString},
+        DSABLDACSS:  ${GraphQLString},
+        RESTROOMS: ${GraphQLInt},
+        VISTOR_CTR:  ${GraphQLString},
+        DOG_FRIENDLY:  ${GraphQLString}, 
+        EZ4STROLLERS:  ${GraphQLString},
+        PCNC_AREA:  ${GraphQLString},
+        CAMPGROUND:  ${GraphQLString},
+        SNDY_BEACH:  ${GraphQLString},
+        DUNES:  ${GraphQLString},
+        RKY_SHORE: ${GraphQLInt},
+        BLUFF:  ${GraphQLString},
+        STRS_BEACH:  ${GraphQLString},
+        PTH_BEACH:  ${GraphQLString},
+        BLFTP_TRLS:  ${GraphQLString},
+        BLFTP_PRK:  ${GraphQLString},
+        WLDLFE_VWG:  ${GraphQLString},
+        TIDEPOOL:  ${GraphQLString},
+        VOLLEYBALL: ${GraphQLInt},
+        FISHING:  ${GraphQLString},
+        BOATING:  ${GraphQLString},
+        LIST_ORDER:  ${GraphQLString},
+        GEOGR_AREA:  ${GraphQLString},
+        LATITUDE: ${GraphQLFloat},
+        LONGITUDE: ${GraphQLFloat},
+        Photo_1:  ${GraphQLString},
+        Photo_2:  ${GraphQLString},
+        Photo_3:  ${GraphQLString},
+        Photo_4:  ${GraphQLString},
+        Bch_whlchr:  ${GraphQLString},
+        BIKE_PATH:  ${GraphQLString},
+        BT_FACIL_TYPE:  ${GraphQLString},
+}
 
 
-const UserType = new GraphQLObjectType({
-    name: 'User',
-    fields: () => ({
-        username: {type: GraphQLString}, 
-        password: {type: GraphQLString},
-        email: {type: GraphQLString},
-        joinDate: {type: GraphQLString},
-        favorites: [Location]
-    })
-}) 
+type User{
+    username: String! @unique
+    password: String!
+    email: String!
+    joinDate: String
+    favorites: [Location]
+}
 
+
+
+type Query {
+    getLocation(ID: ID!): [Location],
+    getAllLocations: [Location]
+}
+
+`

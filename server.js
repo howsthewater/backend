@@ -9,7 +9,7 @@ const Location = require('./models/Location.js')
 const { graphiqlExpress, graphqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 
-const { typeDefs } = require('./schema');
+const {typeDefs} = require('./schema');
 const { resolvers } = require('./resolvers');
 
 const schema = makeExecutableSchema({
@@ -28,18 +28,15 @@ mongoose
 // Initializes application
 const app = express();
 
-app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }
+app.use('/graphiql', bodyParser.json(), graphiqlExpress({ endpointURL: '/graphql' }
 ))
 
 // conect schemas with graphql
 app.use('/graphql', bodyParser.json(), graphqlExpress({
     schema,
     context: {
-        // Recipe,
-        User,
         Location
     }
-
 }));
 
 
