@@ -4,8 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "server": "nodemon app.js",
-    "client": "cd client && npm start",
+    "start": "node app.js",
+    "server": "node app.js",
+    "client": "npm start",
     "dev": "concurrently --names \"app,client\" \"npm run app --silent\" \"npm run client --silent\""
   },
   "author": "",
@@ -15,7 +16,6 @@
     "express-graphql": "^0.9.0",
     "graphql": "^14.4.2",
     "graphql-to-mongodb": "^1.6.4",
-    "lodash": "^4.17.15",
     "mongoose": "^5.6.9",
     "mongoose-float": "^1.0.4"
   }
