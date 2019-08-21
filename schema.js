@@ -1,73 +1,61 @@
-exports.typeDefs = `
+const graphql = require('graphql');
+const {GraphQLObjectType, GraphQLFloat, GraphQLID, GraphQLList, GraphQLString, GraphQLInt} = graphql;
 
-type Location {
-    ID: Int
-    DISTRICT: String
-    CountyNum: Int
-    COUNTY: String
-    NameMobileWeb: String
-    LocationMobileWeb: String
-    DescriptionMobileWeb: String
-    PHONE_NMBR: String
-    PARKING: String
-    DSABLDACSS: String
-    RESTROOMS: Int
-    VISTOR_CTR: String
-    DOG_FRIENDLY: String
-    EZ4STROLLERS: String
-    PCNC_AREA: String
-    CAMPGROUND: String
-    SNDY_BEACH: String
-    DUNES: String
-    RKY_SHORE: Int
-    BLUFF: String
-    STRS_BEACH: String
-    PTH_BEACH: String
-    BLFTP_TRLS: String
-    BLFTP_PRK: String
-    WLDLFE_VWG: String
-    TIDEPOOL: String
-    VOLLEYBALL: Int
-    FISHING: String
-    BOATING: String
-    LIST_ORDER: String
-    GEOGR_AREA: String
-    LATITUDE: Float
-    LONGITUDE: Float
-    Photo_1: String
-    Photo_2: String
-    Photo_3: String
-    Photo_4: String
-    Bch_whlchr: String
-    BIKE_PATH: String
-    BT_FACIL_TYPE: String
-}
 
+const Location = new GraphQLObjectType({
+    name: 'Location',
+    fields: () => ({
+        ID: {type: GraphQLID},
+        DISTRICT: {type: GraphQLString},
+        CountyNum: {type: GraphQLInt},
+        COUNTY: {type: GraphQLString},
+        NameMobileWeb: {type: GraphQLString},
+        LocationMobileWeb: {type: GraphQLString},
+        DescriptionMobileWeb: {type: GraphQLString},
+        PHONE_NMBR: {type: GraphQLString},
+        PARKING: {type: GraphQLString},
+        DSABLDACSS: {type: GraphQLString},
+        RESTROOMS: {type: GraphQLInt},
+        VISTOR_CTR: {type: GraphQLString},
+        DOG_FRIENDLY: {type: GraphQLString},
+        EZ4STROLLERS: {type: GraphQLString},
+        PCNC_AREA: {type: GraphQLString},
+        CAMPGROUND: {type: GraphQLString},
+        SNDY_BEACH: {type: GraphQLString},
+        DUNES: {type: GraphQLString},
+        RKY_SHORE: {type: GraphQLInt},
+        BLUFF: {type: GraphQLString},
+        STRS_BEACH: {type: GraphQLString},
+        PTH_BEACH: {type: GraphQLString},
+        BLFTP_TRLS: {type: GraphQLString},
+        BLFTP_PRK: {type: GraphQLString},
+        WLDLFE_VWG: {type: GraphQLString},
+        TIDEPOOL: {type: GraphQLString},
+        VOLLEYBALL: {type: GraphQLInt},
+        FISHING: {type: GraphQLString},
+        BOATING: {type: GraphQLString},
+        LIST_ORDER: {type: GraphQLString},
+        GEOGR_AREA: {type: GraphQLString},
+        LATITUDE: {type: GraphQLFloat},
+        LONGITUDE: {type: GraphQLFloat},
+        Photo_1: {type: GraphQLString},
+        Photo_2: {type: GraphQLString},
+        Photo_3: {type: GraphQLString},
+        Photo_4: {type: GraphQLString},
+        Bch_whlchr: {type: GraphQLString},
+        BIKE_PATH: {type: GraphQLString},
+        BT_FACIL_TYPE: {type: GraphQLString},
+
+    })
+
+}) 
 
 
 type User {
-    username: String! @unique
-    password: String!
-    email: String!
-    joinDate: String
+    username: {type: GraphQLString}! @unique
+    password: {type: GraphQLString}!
+    email: {type: GraphQLString}!
+    joinDate: {type: GraphQLString}
     favorites: [Location]
 }
-
-type Query {
-    getAllLocations: [Location]
-}
-`;
-// type Mutation {
-//     addRecipe(name: String!, description: String!, catagory: String!, instructions: String!, username: String): Recipe
-// }
-
-// type Recipe {
-//     name: String!
-//     catagory: String!
-//     description: String!
-//     instructions: String!
-//     createdDate: String
-//     likes: Int
-//     username: String
-// }
 

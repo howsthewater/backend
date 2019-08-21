@@ -7,16 +7,4 @@ exports.resolvers = {
           }
         },
 
-    // Mutation: {
-    //     addRecipe: async (root, { name, description, catagory, instructions, username }, { Recipe }) => {
-    //         const newRecipe = await new Recipe({
-    //             name,
-    //             description,
-    //             catagory,
-    //             instructions,
-    //             username
-    //         }).save();
-    //         return newRecipe;
-    //     }
-    // }
 }
