@@ -31,7 +31,7 @@ The name, description, district, county, and address of the first 200 beaches, s
 
 
 
-The name, description, district, county, address, photos (if available), latitude, handicap info, dog info of the first 253 (there are not that many beaches) beaches, starting from Los Angles and going south that has handicap access and id dog friendly: 
+The name, description, district, county, address, photos (if available), latitude, handicap info, dog info of the first 253 (there are not that many beaches) beaches, starting from Los Angles (latitude of LA is 34.05) and going south that has handicap access and id dog friendly: 
 
 {
   filter(filter: {DSABLDACSS: {EQ: "Yes"}, DOG_FRIENDLY: {EQ: "Yes"}, LATITUDE: {LT: 34.05}}, 
