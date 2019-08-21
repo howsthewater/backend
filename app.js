@@ -23,6 +23,14 @@ app.use(
   })
 );
 
-app.listen(4000, () => {
-  console.log("now listening for requests on port 4000");
+const PORT = process.env.PORT || 4444;
+
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
 });
+
+
+
+// app.listen(4000, () => {
+//   console.log("now listening for requests on port 4000");
+// });
