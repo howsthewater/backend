@@ -2,13 +2,11 @@ const express = require("express");
 const graphqlHTTP = require("express-graphql");
 const schema = require("./schema/schema");
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 // connect to mongodb
 
-mongoose.connect(
-  "mongodb+srv://ant:ant123@cluster0-bse6j.mongodb.net/howsthewater?retryWrites=true&w=majority",
-  { useNewUrlParser: true }
-);
+mongoose.connect(process.env.MONGO_API, { useNewUrlParser: true });
 mongoose.connection.once("open", () => {
   console.log("connected to database");
 });
