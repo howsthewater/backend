@@ -3,6 +3,7 @@ const graphql = require("graphql");
 const User = require("../models/user.js");
 const Location = require("../models/location.js");
 const fetch = require("node-fetch");
+const url = require("url");
 const {
   getGraphQLQueryArgs,
   getMongoDbQueryResolver,
@@ -69,9 +70,22 @@ const LocationType = new GraphQLObjectType({
     WwoAPI: {
       type: WwoAPIType,
       resolve(parent, args) {
-        return fetch(
-          `http://api.worldweatheronline.com/premium/v1/weather.ashx?key=747d8c5349384e6497b03330191808&q= ${parent.LATITUDE}, ${parent.LONGITUDE}&format=json&num_of_days=1&fx=yes&moonrise=yes&tp=24`
-        )
+        
+        const myURL = new URL(
+          `http://api.worldweatheronline.com/premium/v1/weather.ashx`
+        );
+        const params = new URLSearchParams({
+          key: process.env.WWO_API,
+          q: ` ${parent.LATITUDE}, ${parent.LONGITUDE}`,
+          format: "json",
+          num_of_days: 1,
+          fx: "yes",
+          moonrise: "yes",
+          tp: 24
+        });
+        myURL.search = params;
+
+        return fetch(myURL.href)
           .then(response => {
             console.log(response);
             return response.json();
@@ -84,18 +98,25 @@ const LocationType = new GraphQLObjectType({
       resolve(parent, args) {
         const time = Math.floor(new Date() / 1000);
         console.log(time);
-        const endTime = time + 30000;
+        const endTime = time + 40000;
         console.log(endTime);
-        return fetch(
-          `https://api.stormglass.io/v1/tide/extremes/point?lat=${parent.LATITUDE}&lng=${parent.LONGITUDE}&start=${time}&end=${endTime}`,
-          {
-            headers: {
-              Authorization:
-                // "3b35b4fe-c157-11e9-ba13-0242ac130004-3b35b67a-c157-11e9-ba13-0242ac130004"
-                "e12cc640-c8b4-11e9-ba13-0242ac130004-e12cc758-c8b4-11e9-ba13-0242ac130004"
-            }
+
+        const myURL = new URL(
+          `https://api.stormglass.io/v1/tide/extremes/point`
+        );
+        const params = new URLSearchParams({
+          lat: parent.LATITUDE,
+          lng: parent.LONGITUDE,
+          start: time,
+          end: endTime
+        });
+        myURL.search = params;
+
+        return fetch(myURL.href, {
+          headers: {
+            Authorization: process.env.STORMGLASS_API
           }
-        )
+        })
           .then(response => {
             console.log(response);
             return response.json();
@@ -108,18 +129,23 @@ const LocationType = new GraphQLObjectType({
       resolve(parent, args) {
         const time = Math.floor(new Date() / 1000);
         console.log(time);
-        const endTime = time + 30000;
-        console.log(endTime);
-        return fetch(
-          `https://api.stormglass.io/v1/weather/point?lat=${parent.LATITUDE}&lng=${parent.LONGITUDE}&start=${time}&end=${time}&source=sg&params=waterTemperature,waveHeight,swellHeight`,
-          {
-            headers: {
-              Authorization:
-                // "3b35b4fe-c157-11e9-ba13-0242ac130004-3b35b67a-c157-11e9-ba13-0242ac130004"
-                "e12cc640-c8b4-11e9-ba13-0242ac130004-e12cc758-c8b4-11e9-ba13-0242ac130004"
-            }
+
+        const myURL = new URL(`https://api.stormglass.io/v1/weather/point`);
+        const params = new URLSearchParams({
+          lat: parent.LATITUDE,
+          lng: parent.LONGITUDE,
+          start: time,
+          end: time,
+          source: "sg",
+          params: "waterTemperature,waveHeight,swellHeight"
+        });
+        myURL.search = params;
+
+        return fetch(myURL.href, {
+          headers: {
+            Authorization: process.env.STORMGLASS_API
           }
-        )
+        })
           .then(response => {
             console.log(response);
             return response.json();
