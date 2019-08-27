@@ -61,33 +61,24 @@ const LocationType = new GraphQLObjectType({
     LONGITUDE: { type: new GraphQLNonNull(GraphQLFloat) },
     Photo_1: { type: new GraphQLNonNull(GraphQLString) },
     Photo_2: { type: new GraphQLNonNull(GraphQLString) },
-    Photo_3: { type: new GraphQLNonNull(GraphQLString) },  
+    Photo_3: { type: new GraphQLNonNull(GraphQLString) },
     Photo_4: { type: new GraphQLNonNull(GraphQLString) },
     Bch_whlchr: { type: new GraphQLNonNull(GraphQLString) },
     BIKE_PATH: { type: new GraphQLNonNull(GraphQLString) },
     BT_FACIL_TYPE: { type: new GraphQLNonNull(GraphQLString) },
     person: {
       type: PersonType,
-      resolve (parent, args){
-//        return fetch(`https://swapi.co/api/people/${parent.ID}/`)
-         return fetch(
-           `http://api.worldweatheronline.com/premium/v1/weather.ashx?key=747d8c5349384e6497b03330191808&q= ${parent.LATITUDE}, ${parent.LONGITUDE}&format=json&num_of_days=1&fx=yes&moonrise=yes&tp=24`
-         )
+      resolve(parent, args) {
+        return fetch(
+          `http://api.worldweatheronline.com/premium/v1/weather.ashx?key=747d8c5349384e6497b03330191808&q= ${parent.LATITUDE}, ${parent.LONGITUDE}&format=json&num_of_days=1&fx=yes&moonrise=yes&tp=24`
+        )
           .then(response => {
             console.log(response);
             return response.json();
           })
           .catch(error => console.log(error));
-        
       }
     }
-    // author: {
-    //   type: AuthorType,
-    //   resolve(parent, args) {
-    //     //        return _.find(authors, { id: parent.authorId });
-    //     return Author.findById(parent.authorId);
-    //   }
-    // }
   })
 });
 
@@ -119,11 +110,10 @@ const Current_ConditionType = new GraphQLObjectType({
   name: "Current_Condition",
   fields: () => ({
     observation_time: { type: GraphQLString },
-    temp_C: { type: GraphQLString  },
+    temp_C: { type: GraphQLString },
     temp_F: { type: GraphQLString }
   })
 });
-
 
 const WeatherType = new GraphQLObjectType({
   name: "Weather",
@@ -152,7 +142,6 @@ const HourlyType = new GraphQLObjectType({
   })
 });
 
-
 const UserType = new GraphQLObjectType({
   name: "User",
   fields: () => ({
@@ -160,14 +149,6 @@ const UserType = new GraphQLObjectType({
     beachId: { type: new GraphQLNonNull(GraphQLString) },
     name: { type: new GraphQLNonNull(GraphQLString) },
     age: { type: GraphQLInt }
-    //    bookId: { type: new GraphQLNonNull(GraphQLString) },
-    // locations: {
-    //   type: new GraphQLList(locationType),
-    //   resolve(parent, args) {
-    //     //        return _.filter(books, { authorId: parent.id });
-    //     return Location.find({ ID: parent.beachId });
-    //   }
-    // }
   })
 });
 
@@ -178,8 +159,6 @@ const RootQuery = new GraphQLObjectType({
       type: LocationType,
       args: { ID: { type: GraphQLID } },
       resolve(parent, args) {
-        // code to get data from db or source
-        //        return _.find(books, { id: args.id });
         return Location.findById(args.ID);
       }
     },
@@ -187,7 +166,6 @@ const RootQuery = new GraphQLObjectType({
       type: UserType,
       args: { id: { type: GraphQLID } },
       resolve(parant, args) {
-        //        return _.find(authors, { id: args.id });
         return User.findById(args.id);
       }
     },
@@ -204,14 +182,12 @@ const RootQuery = new GraphQLObjectType({
     locations: {
       type: new GraphQLList(LocationType),
       resolve(parent, args) {
-        //        return books;
         return Location.find({});
       }
     },
     users: {
       type: new GraphQLList(UserType),
       resolve(parent, args) {
-        //        return authors;
         return User.find({});
       }
     }
@@ -237,22 +213,6 @@ const Mutation = new GraphQLObjectType({
         return user.save();
       }
     }
-    // addBook: {
-    //   type: BookType,
-    //   args: {
-    //     name: { type: new GraphQLNonNull(GraphQLString) },
-    //     genre: { type: new GraphQLNonNull(GraphQLString) },
-    //     authorId: { type: new GraphQLNonNull(GraphQLID) }
-    //   },
-    //   resolve(parent, args) {
-    //     let book = new Book({
-    //       name: args.name,
-    //       genre: args.genre,
-    //       authorId: args.authorId
-    //     });
-    //     return book.save();
-    //   }
-    // }
   }
 });
 
