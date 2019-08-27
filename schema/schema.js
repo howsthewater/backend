@@ -36,7 +36,7 @@ const LocationType = new GraphQLObjectType({
     PHONE_NMBR: { type: new GraphQLNonNull(GraphQLString) },
     PARKING: { type: new GraphQLNonNull(GraphQLString) },
     DSABLDACSS: { type: new GraphQLNonNull(GraphQLString) },
-    RESTROOMS: { type: new GraphQLNonNull(GraphQLString) },
+    RESTROOMS: { type: GraphQLString },
     VISTOR_CTR: { type: new GraphQLNonNull(GraphQLString) },
     DOG_FRIENDLY: { type: new GraphQLNonNull(GraphQLString) },
     EZ4STROLLERS: { type: new GraphQLNonNull(GraphQLString) },
@@ -66,11 +66,59 @@ const LocationType = new GraphQLObjectType({
     Bch_whlchr: { type: new GraphQLNonNull(GraphQLString) },
     BIKE_PATH: { type: new GraphQLNonNull(GraphQLString) },
     BT_FACIL_TYPE: { type: new GraphQLNonNull(GraphQLString) },
-    person: {
-      type: PersonType,
+    WwoAPI: {
+      type: WwoAPIType,
       resolve(parent, args) {
         return fetch(
           `http://api.worldweatheronline.com/premium/v1/weather.ashx?key=747d8c5349384e6497b03330191808&q= ${parent.LATITUDE}, ${parent.LONGITUDE}&format=json&num_of_days=1&fx=yes&moonrise=yes&tp=24`
+        )
+          .then(response => {
+            console.log(response);
+            return response.json();
+          })
+          .catch(error => console.log(error));
+      }
+    },
+    TideAPI: {
+      type: TideAPIType,
+      resolve(parent, args) {
+        const time = Math.floor(new Date() / 1000);
+        console.log(time);
+        const endTime = time + 30000;
+        console.log(endTime);
+        return fetch(
+          `https://api.stormglass.io/v1/tide/extremes/point?lat=${parent.LATITUDE}&lng=${parent.LONGITUDE}&start=${time}&end=${endTime}`,
+          {
+            headers: {
+              Authorization:
+                // "3b35b4fe-c157-11e9-ba13-0242ac130004-3b35b67a-c157-11e9-ba13-0242ac130004"
+                "e12cc640-c8b4-11e9-ba13-0242ac130004-e12cc758-c8b4-11e9-ba13-0242ac130004"
+            }
+          }
+        )
+          .then(response => {
+            console.log(response);
+            return response.json();
+          })
+          .catch(error => console.log(error));
+      }
+    },
+    StormAPI: {
+      type: StormAPIType,
+      resolve(parent, args) {
+        const time = Math.floor(new Date() / 1000);
+        console.log(time);
+        const endTime = time + 30000;
+        console.log(endTime);
+        return fetch(
+          `https://api.stormglass.io/v1/weather/point?lat=${parent.LATITUDE}&lng=${parent.LONGITUDE}&start=${time}&end=${time}&source=sg&params=waterTemperature,waveHeight,swellHeight`,
+          {
+            headers: {
+              Authorization:
+                // "3b35b4fe-c157-11e9-ba13-0242ac130004-3b35b67a-c157-11e9-ba13-0242ac130004"
+                "e12cc640-c8b4-11e9-ba13-0242ac130004-e12cc758-c8b4-11e9-ba13-0242ac130004"
+            }
+          }
         )
           .then(response => {
             console.log(response);
@@ -82,8 +130,10 @@ const LocationType = new GraphQLObjectType({
   })
 });
 
-const PersonType = new GraphQLObjectType({
-  name: "Person",
+// World Weather Online API
+
+const WwoAPIType = new GraphQLObjectType({
+  name: "WwoAPI",
   fields: () => ({
     data: { type: DataType }
   })
@@ -111,7 +161,15 @@ const Current_ConditionType = new GraphQLObjectType({
   fields: () => ({
     observation_time: { type: GraphQLString },
     temp_C: { type: GraphQLString },
-    temp_F: { type: GraphQLString }
+    temp_F: { type: GraphQLString },
+    weatherDesc: { type: new GraphQLList(WeatherDescType) }
+  })
+});
+
+const WeatherDescType = new GraphQLObjectType({
+  name: "weatherDesc",
+  fields: () => ({
+    value: { type: GraphQLString }
   })
 });
 
@@ -137,10 +195,82 @@ const HourlyType = new GraphQLObjectType({
   fields: () => ({
     windspeedMiles: { type: GraphQLString },
     windspeedKmph: { type: GraphQLString },
+    winddir16Point: { type: GraphQLString },
     WindChillF: { type: GraphQLString },
     WindChillC: { type: GraphQLString }
   })
 });
+
+// TideAPI - (also Stormglass API)
+
+const TideAPIType = new GraphQLObjectType({
+  name: "TideAPI",
+  fields: () => ({
+    extremes: { type: new GraphQLList(ExtremesType) },
+    meta: { type: MetaType }
+  })
+});
+
+const ExtremesType = new GraphQLObjectType({
+  name: "Extremes",
+  fields: () => ({
+    height: { type: GraphQLString },
+    timestamp: { type: GraphQLString },
+    type: { type: GraphQLString }
+  })
+});
+
+const MetaType = new GraphQLObjectType({
+  name: "Meta",
+  fields: () => ({
+    end: { type: GraphQLString },
+    start: { type: GraphQLString }
+  })
+});
+
+// Stormglass API
+
+const StormAPIType = new GraphQLObjectType({
+  name: "StormAPI",
+  fields: () => ({
+    hours: { type: new GraphQLList(HoursType) }
+  })
+});
+
+const HoursType = new GraphQLObjectType({
+  name: "Hours",
+  fields: () => ({
+    swellHeight: { type: new GraphQLList(swellHeightType) },
+    waterTemperature: { type: new GraphQLList(waterTemperatureType) },
+    waveHeight: { type: new GraphQLList(waveHeightType) }
+  })
+});
+
+const swellHeightType = new GraphQLObjectType({
+  name: "swellHeight",
+  fields: () => ({
+    source: { type: GraphQLString },
+    value: { type: GraphQLString }
+  })
+});
+
+const waterTemperatureType = new GraphQLObjectType({
+  name: "waterTemperature",
+  fields: () => ({
+    source: { type: GraphQLString },
+    value: { type: GraphQLString }
+  })
+});
+
+const waveHeightType = new GraphQLObjectType({
+  name: "waveHeight",
+  fields: () => ({
+    source: { type: GraphQLString },
+    value: { type: GraphQLString }
+  })
+});
+
+// Future UserType for logged in user control
 
 const UserType = new GraphQLObjectType({
   name: "User",
