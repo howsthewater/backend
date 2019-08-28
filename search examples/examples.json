@@ -1,0 +1,65 @@
+The Name of the first 100 beaches starting from the southernmost point in california that has parking:
+
+{
+    filter (
+        filter: {
+           PARKING : { EQ: "Yes" }},
+        sort: { LATITUDE: ASC },
+        pagination: { limit: 100 }
+    ) {
+        NameMobileWeb
+    }
+}
+
+
+
+
+
+The name, description, district, county, and address of the first 200 beaches, starting from the northern most part of california that allows fishing:
+
+{
+  filter(filter: {FISHING: {EQ: "Yes"}}, sort: {LATITUDE: DESC}, pagination: {limit: 200}) {
+    NameMobileWeb
+    DescriptionMobileWeb
+    DISTRICT
+    COUNTY
+    LocationMobileWeb
+  }
+}
+
+
+
+
+
+The name, description, district, county, address, photos (if available), latitude, handicap info, dog info of the first 253 (there are not that many beaches) beaches, starting from Los Angles (latitude of LA is 34.05) and going south that has handicap access and id dog friendly: 
+
+{
+  filter(filter: {DSABLDACSS: {EQ: "Yes"}, DOG_FRIENDLY: {EQ: "Yes"}, LATITUDE: {LT: 34.05}}, 
+    sort: {LATITUDE: DESC}, pagination: {limit: 253}) {
+    NameMobileWeb
+    DescriptionMobileWeb
+    DISTRICT
+    COUNTY
+    LocationMobileWeb
+    Photo_1
+    Photo_2
+    Photo_3
+    Photo_4
+    LATITUDE
+    DSABLDACSS
+    DOG_FRIENDLY
+  }
+}
+
+
+LIST OF FILTER TERMS:
+
+_id, ID, DISTRICT, CountyNum, COUNTY, NameMobileWeb, LocationMobileWeb, DescriptionMobileWeb, PHONE_NMBR, FEE, PARKING, DSABLDACSS, RESTROOMS, VISTOR_CTR, DOG_FRIENDLY, EZ4STROLLERS, PCNC_AREA, CAMPGROUND, SNDY_BEACH, DUNES, RKY_SHORE, BLUFF, STRS_BEACH, PTH_BEACH, BLFTP_TRLS, BLFTP_PRK, WLDLFE_VWG, TIDEPOOL, VOLLEYBALL, FISHING, BOATING, LIST_ORDER, GEOGR_AREA, LATITUDE, LONGITUDE, Photo_1, Photo_2, Photo_3, Photo_4, Bch_whlchr, BIKE_PATH, BT_FACIL_TYPE
+
+
+
+** You must filter by "Yes", "No", or "". Yes and No must be capitalized.
+** "Yes" means the beach has the amenity.
+** "No" means the beach DOES NOT have the amenity.
+** "" we do not yet know what "" means.
+
