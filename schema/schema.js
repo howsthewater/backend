@@ -3,8 +3,8 @@ const graphql = require("graphql");
 const User = require("../models/user.js");
 const Location = require("../models/location.js");
 const fetch = require("node-fetch");
-const wwo = require('./api/worldWeatherOnline');
-const sg = require('./api/stormGlass');
+const wwo = require('../api/worldWeatherOnline');
+const sg = require('../api/stormGlass');
 const url = require("url");
 const {
   getGraphQLQueryArgs,
