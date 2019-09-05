@@ -2,7 +2,7 @@ const express = require("express");
 const graphqlHTTP = require("express-graphql");
 const schema = require("./schema/schema");
 const mongoose = require("mongoose");
-require('dotenv').config();
+require("dotenv").config();
 
 // connect to mongodb
 
@@ -26,5 +26,3 @@ const PORT = process.env.PORT || 4444;
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
-
-
