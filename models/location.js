@@ -166,6 +166,10 @@ const LocationSchema = new Schema({
   BT_FACIL_TYPE: {
     type: String,
     required: false
+  },
+    REGION: {
+    type: String,
+    required: false
   }
 });
 module.exports = mongoose.model("Location", LocationSchema);

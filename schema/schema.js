@@ -1,3 +1,4 @@
+
 const graphql = require("graphql");
 // const _ = require("lodash");
 const User = require("../models/user.js");
@@ -6,6 +7,8 @@ const fetch = require("node-fetch");
 const wwo = require('../api/worldWeatherOnline');
 const sg = require('../api/stormGlass');
 const url = require("url");
+ 
+
 const {
   getGraphQLQueryArgs,
   getMongoDbQueryResolver,
@@ -62,6 +65,7 @@ const LocationType = new GraphQLObjectType({
     GEOGR_AREA: { type: new GraphQLNonNull(GraphQLString) },
     LATITUDE: { type: new GraphQLNonNull(GraphQLFloat) },
     LONGITUDE: { type: new GraphQLNonNull(GraphQLFloat) },
+    REGION: {type: new GraphQLNonNull(GraphQLString)}, 
     Photo_1: { type: new GraphQLNonNull(GraphQLString) },
     Photo_2: { type: new GraphQLNonNull(GraphQLString) },
     Photo_3: { type: new GraphQLNonNull(GraphQLString) },
@@ -178,7 +182,8 @@ const RootQuery = new GraphQLObjectType({
       type: LocationType,
       args: { ID: { type: GraphQLID } },
       resolve(parent, args) {
-        return Location.findById(args.ID);
+        const result = Location.findById(args.ID);
+        
       }
     },
     user: {
