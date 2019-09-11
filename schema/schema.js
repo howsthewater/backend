@@ -168,10 +168,10 @@ const LocationType = new GraphQLObjectType({
 const UserType = new GraphQLObjectType({
   name: "User",
   fields: () => ({
-    id: { type: GraphQLID },
-    beachId: { type: new GraphQLNonNull(GraphQLString) },
-    name: { type: new GraphQLNonNull(GraphQLString) },
-    age: { type: GraphQLInt }
+    cognitoUserId: { type: GraphQLID },
+    fullName: { type: new GraphQLNonNull(GraphQLString) },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    homeBeach: { type: GraphQLID },
   })
 });
 
@@ -189,7 +189,7 @@ const RootQuery = new GraphQLObjectType({
     user: {
       type: UserType,
       args: { id: { type: GraphQLID } },
-      resolve(parant, args) {
+      resolve(parent, args) {
         return User.findById(args.id);
       }
     },
@@ -224,15 +224,17 @@ const Mutation = new GraphQLObjectType({
     addUser: {
       type: UserType,
       args: {
-        beachId: { type: new GraphQLNonNull(GraphQLString) },
-        name: { type: new GraphQLNonNull(GraphQLString) },
-        age: { type: GraphQLInt }
+        cognitoUserId: { type: new GraphQLNonNull (GraphQLID) },
+        fullName: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        homeBeach: { type: GraphQLID },
       },
       resolve(parent, args) {
         let user = new User({
-          beachId: args.beachId,
-          name: args.name,
-          age: args.age
+          cognitoUserId: args.cognitoUserId,
+          fullName: args.fullName,
+          email: args.email,
+          homeBeach: args.homeBeach
         });
         return user.save();
       }
