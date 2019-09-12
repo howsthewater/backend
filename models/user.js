@@ -1,18 +1,25 @@
-
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  beachId: {
+  cognitoUserId: {
+    type: Number,
+    required: true
+  },
+  fullName: {
     type: String,
     required: true
   },
-  name: {
+  email: {
     type: String,
-    required: true,
+    required: false,
     unique: true
   },
-  age: {
+  homeBeach: {
+    type: Number,
+    required: false
+  },
+  longitude: {
     type: Number,
     required: false
   }

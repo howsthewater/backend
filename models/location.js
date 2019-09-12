@@ -167,7 +167,7 @@ const LocationSchema = new Schema({
     type: String,
     required: false
   },
-  REGION:{
+    REGION: {
     type: String,
     required: false
   }
