@@ -19,6 +19,11 @@ const UserSchema = new Schema({
     type: Number,
     required: false
   },
+  homeBeachName: {
+    type: String,
+    required: false,
+    unique: false
+  },
   longitude: {
     type: Number,
     required: false
