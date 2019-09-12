@@ -170,7 +170,8 @@ const UserType = new GraphQLObjectType({
     email: { type: new GraphQLNonNull(GraphQLString) },
     homeBeach: { type: GraphQLID },
     homeBeachName: { type: GraphQLString },
-    longitude: { type: GraphQLFloat }
+    longitude: { type: GraphQLFloat },
+    latitude: {type: GraphQLFloat}
   })
 });
 
@@ -227,7 +228,8 @@ const Mutation = new GraphQLObjectType({
         email: { type: new GraphQLNonNull(GraphQLString) },
         homeBeach: { type: GraphQLID },
         homeBeachName: { type: GraphQLString },
-        longitude: { type: GraphQLFloat }
+        longitude: { type: GraphQLFloat },
+        latitude: {type: GraphQLFloat}
       },
       resolve(parent, args) {
         let user = new User({
@@ -236,7 +238,8 @@ const Mutation = new GraphQLObjectType({
           email: args.email,
           homeBeach: args.homeBeach,
           homeBeachName: args.homeBeachName,
-          longitude: args.longitude
+          longitude: args.longitude,
+          latitude: args.latitude
         });
         return user.save();
       }
