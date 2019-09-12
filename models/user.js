@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -17,6 +16,10 @@ const UserSchema = new Schema({
     unique: true
   },
   homeBeach: {
+    type: Number,
+    required: false
+  },
+  longitude: {
     type: Number,
     required: false
   }
