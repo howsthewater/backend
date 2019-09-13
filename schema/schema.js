@@ -165,7 +165,7 @@ const LocationType = new GraphQLObjectType({
 const UserType = new GraphQLObjectType({
   name: "User",
   fields: () => ({
-    cognitoUserId: { type: GraphQLID },
+    cognitoUserId: { type: new GraphQLNonNull(GraphQLString) },
     fullName: { type: new GraphQLNonNull(GraphQLString) },
     email: { type: new GraphQLNonNull(GraphQLString) },
     homeBeach: { type: GraphQLID },
@@ -222,7 +222,7 @@ const Mutation = new GraphQLObjectType({
     addUser: {
       type: UserType,
       args: {
-        cognitoUserId: { type: new GraphQLNonNull(GraphQLID) },
+        cognitoUserId: { type: new GraphQLNonNull(GraphQLString) },
         fullName: { type: new GraphQLNonNull(GraphQLString) },
         email: { type: new GraphQLNonNull(GraphQLString) },
         homeBeach: { type: GraphQLID },

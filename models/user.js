@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   cognitoUserId: {
-    type: Number,
+    type: String,
     required: true
   },
   fullName: {
