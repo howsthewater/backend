@@ -163,7 +163,7 @@ const LocationType = new GraphQLObjectType({
 // Future UserType for logged in user control
 
 const UserType = new GraphQLObjectType({
-  name: "User",
+  name: "User", 
   fields: () => ({
     cognitoUserId: { type: GraphQLID },
     fullName: { type: new GraphQLNonNull(GraphQLString) },
