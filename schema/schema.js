@@ -1,13 +1,11 @@
-
 const graphql = require("graphql");
 // const _ = require("lodash");
 const User = require("../models/user.js");
 const Location = require("../models/location.js");
 const fetch = require("node-fetch");
-const wwo = require('../api/worldWeatherOnline');
-const sg = require('../api/stormGlass');
+const wwo = require("../api/worldWeatherOnline");
+const sg = require("../api/stormGlass");
 const url = require("url");
- 
 
 const {
   getGraphQLQueryArgs,
@@ -65,7 +63,7 @@ const LocationType = new GraphQLObjectType({
     GEOGR_AREA: { type: new GraphQLNonNull(GraphQLString) },
     LATITUDE: { type: new GraphQLNonNull(GraphQLFloat) },
     LONGITUDE: { type: new GraphQLNonNull(GraphQLFloat) },
-    REGION: {type: new GraphQLNonNull(GraphQLString)}, 
+    REGION: { type: new GraphQLNonNull(GraphQLString) },
     Photo_1: { type: new GraphQLNonNull(GraphQLString) },
     Photo_2: { type: new GraphQLNonNull(GraphQLString) },
     Photo_3: { type: new GraphQLNonNull(GraphQLString) },
@@ -73,11 +71,10 @@ const LocationType = new GraphQLObjectType({
     Bch_whlchr: { type: new GraphQLNonNull(GraphQLString) },
     BIKE_PATH: { type: new GraphQLNonNull(GraphQLString) },
     BT_FACIL_TYPE: { type: new GraphQLNonNull(GraphQLString) },
-    
+
     WwoAPI: {
       type: wwo.WwoAPIType,
       resolve(parent, args) {
-        
         const myURL = new URL(
           `http://api.worldweatheronline.com/premium/v1/weather.ashx`
         );
@@ -166,12 +163,15 @@ const LocationType = new GraphQLObjectType({
 // Future UserType for logged in user control
 
 const UserType = new GraphQLObjectType({
-  name: "User",
+  name: "User", 
   fields: () => ({
-    id: { type: GraphQLID },
-    beachId: { type: new GraphQLNonNull(GraphQLString) },
-    name: { type: new GraphQLNonNull(GraphQLString) },
-    age: { type: GraphQLInt }
+    cognitoUserId: { type: GraphQLID },
+    fullName: { type: new GraphQLNonNull(GraphQLString) },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    homeBeach: { type: GraphQLID },
+    homeBeachName: { type: GraphQLString },
+    longitude: { type: GraphQLFloat },
+    latitude: {type: GraphQLFloat}
   })
 });
 
@@ -183,13 +183,12 @@ const RootQuery = new GraphQLObjectType({
       args: { ID: { type: GraphQLID } },
       resolve(parent, args) {
         const result = Location.findById(args.ID);
-        
       }
     },
     user: {
       type: UserType,
       args: { id: { type: GraphQLID } },
-      resolve(parant, args) {
+      resolve(parent, args) {
         return User.findById(args.id);
       }
     },
@@ -224,15 +223,23 @@ const Mutation = new GraphQLObjectType({
     addUser: {
       type: UserType,
       args: {
-        beachId: { type: new GraphQLNonNull(GraphQLString) },
-        name: { type: new GraphQLNonNull(GraphQLString) },
-        age: { type: GraphQLInt }
+        cognitoUserId: { type: new GraphQLNonNull(GraphQLID) },
+        fullName: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        homeBeach: { type: GraphQLID },
+        homeBeachName: { type: GraphQLString },
+        longitude: { type: GraphQLFloat },
+        latitude: {type: GraphQLFloat}
       },
       resolve(parent, args) {
         let user = new User({
-          beachId: args.beachId,
-          name: args.name,
-          age: args.age
+          cognitoUserId: args.cognitoUserId,
+          fullName: args.fullName,
+          email: args.email,
+          homeBeach: args.homeBeach,
+          homeBeachName: args.homeBeachName,
+          longitude: args.longitude,
+          latitude: args.latitude
         });
         return user.save();
       }
