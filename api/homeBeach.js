@@ -2,7 +2,7 @@ const MongoClient = require('mongodb').MongoClient;
  
 const assert = require('assert'); 
 
-//User object to be recieved
+//User object to be recieved. (Test object)
 const user = {
     cognitoUserId: 1,
     fullName: 'TestUser',
@@ -48,7 +48,7 @@ const setHomeBeach = async (usr) => {
             })
             homeBeach = beaches.filter(beach => beach.ID == distances[0].id)
             console.log(homeBeach)
-            
+
             //Returns a complete Location object
             return homeBeach
             
