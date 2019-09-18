@@ -4,7 +4,7 @@ const assert = require('assert');
 
 //User object to be recieved. (Test object)
 const user = {
-    cognitoUserId: 1,
+    cognitoUserId: '9999999',
     fullName: 'TestUser',
     email: 'test@email.com',
     homeBeach: 45,
@@ -16,7 +16,11 @@ const user = {
 //Requires one argument. A user object with at least a 'latitude' and 'longitude'
 const setHomeBeach = async (usr) => {
     const user = usr;
+
+    //Used to compare user's location to beach locations
     const userMi = (Math.cos(user.latitude * (Math.PI/180))) * 69.172
+
+    //Sets constraints for result set
     const userLocale = {
         latLower: user.latitude - 0.001, 
         latUpper: user.latitude + 0.001, 
@@ -27,31 +31,49 @@ const setHomeBeach = async (usr) => {
     const client = new MongoClient('mongodb+srv://ant:ant123@cluster0-bse6j.mongodb.net/howsthewater?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true});
 
     client.connect(async function(err, client){
+        //error handling during connection
          assert.equal(null, err); 
 
         try{
-            const db = client.db("howsthewater");              
+            //Declaration of DB
+            const db = client.db("howsthewater");  
+            
+            //Searches DB for locations within defined latitude and longitude constraints and
+            //puts each location into an array
             let beaches = await db.collection('locations').find({$and: [{LATITUDE: {$lt: userLocale.latUpper}}, 
             {LATITUDE: {$gt: userLocale.latLower}}, {LONGITUDE: {$lt: userLocale.longLower}}, 
             {LONGITUDE:{$gt: userLocale.longUpper}}]}).toArray(); 
-            beaches.sort(); 
-            
+             
+
+            //Holds converted beach distances
             const distances = []; 
-            
+
+            //Converts degrees to miles and pushes beach ID and mileage to new array
             beaches.forEach((beach) => {
                 let mi = (Math.cos(beach.LATITUDE * (Math.PI/180))) * 69.172
                 let dist = mi * userMi / 2
                 distances.push({id: beach.ID, distance: dist});                
             })
+            //Sorts beaches by distance (shortest to longest)
             distances.sort((a,b) => {
                 return a.distance - b.distance
             })
-            homeBeach = beaches.filter(beach => beach.ID == distances[0].id)
-            console.log(homeBeach)
+            //Returns the first beach from the sorted array
+            let homeBeach = beaches.filter(beach => beach.ID == distances[0].id)
 
-            //Returns a complete Location object
-            return homeBeach
+            //Update to user object
+            user.homeBeach = homeBeach[0].ID;
+            user.homeBeachName = homeBeach[0].NameMobileWeb; 
             
+            //Update to user entry in DB
+            let nUser = await db.collection('users').updateOne({cognitoUserId:{$eq: user.cognitoUserId}},
+                {$set: {
+                    homeBeach: user.homeBeach,
+                    homeBeachName: user.homeBeachName
+                }}, {new: true, upsert: true})
+            
+            //Returns updated user object to front end
+            return user; 
         }
         catch(err){console.log(err)}
     })
