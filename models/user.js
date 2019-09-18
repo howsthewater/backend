@@ -3,12 +3,13 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   cognitoUserId: {
-    type: Number,
+    type: String,
     required: true
   },
   fullName: {
     type: String,
-    required: true
+    required: true,
+    unique: false
   },
   email: {
     type: String,
