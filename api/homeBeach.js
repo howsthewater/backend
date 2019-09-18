@@ -4,29 +4,29 @@ const assert = require('assert');
 
 //User object to be recieved. (Test object)
 const user = {
-    cognitoUserId: '9999999',
-    fullName: 'TestUser',
-    email: 'test@email.com',
-    homeBeach: 45,
-    homeBeachName: 'testBeachName',
-    longitude: -124.196581,
-    latitude: 41.748518
+    cognitoUserId: '987654231',
+    fullName: 'TestUser2',
+    email: 'test2@email.com',
+    homeBeach: 0,
+    homeBeachName: '',
+    longitude:  -123.945597,
+    latitude: 46.018191
 }
 
 //Requires one argument. A user object with at least a 'latitude' and 'longitude'
 const setHomeBeach = async (usr) => {
     const user = usr;
-
+    console.log(user)
     //Used to compare user's location to beach locations
     const userMi = (Math.cos(user.latitude * (Math.PI/180))) * 69.172
+    console.log(userMi)
 
     //Sets constraints for result set
     const userLocale = {
-        latLower: user.latitude - 0.001, 
-        latUpper: user.latitude + 0.001, 
-        longLower: user.longitude + .10,
-        longUpper: user.longitude - .20
+        latLower: user.latitude - 0.1, 
+        latUpper: user.latitude + 0.1, 
     }; 
+    
 
     const client = new MongoClient('mongodb+srv://ant:ant123@cluster0-bse6j.mongodb.net/howsthewater?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -41,9 +41,7 @@ const setHomeBeach = async (usr) => {
             //Searches DB for locations within defined latitude and longitude constraints and
             //puts each location into an array
             let beaches = await db.collection('locations').find({$and: [{LATITUDE: {$lt: userLocale.latUpper}}, 
-            {LATITUDE: {$gt: userLocale.latLower}}, {LONGITUDE: {$lt: userLocale.longLower}}, 
-            {LONGITUDE:{$gt: userLocale.longUpper}}]}).toArray(); 
-             
+            {LATITUDE: {$gt: userLocale.latLower}}]}).toArray(); 
 
             //Holds converted beach distances
             const distances = []; 
@@ -54,10 +52,12 @@ const setHomeBeach = async (usr) => {
                 let dist = mi * userMi / 2
                 distances.push({id: beach.ID, distance: dist});                
             })
+
             //Sorts beaches by distance (shortest to longest)
             distances.sort((a,b) => {
                 return a.distance - b.distance
             })
+
             //Returns the first beach from the sorted array
             let homeBeach = beaches.filter(beach => beach.ID == distances[0].id)
 
