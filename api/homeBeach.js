@@ -10,7 +10,7 @@ const user = {
     homeBeach: 0,
     homeBeachName: '',
     longitude:  -123.945597,
-    latitude: 38.170518
+    latitude: 46.018191
 }
 
 //Requires one argument. A user object with at least a 'latitude' and 'longitude'
@@ -26,7 +26,7 @@ const setHomeBeach = async (usr) => {
         latLower: user.latitude - 0.1, 
         latUpper: user.latitude + 0.1, 
     }; 
-    console.log(userLocale)
+    
 
     const client = new MongoClient('mongodb+srv://ant:ant123@cluster0-bse6j.mongodb.net/howsthewater?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -42,8 +42,6 @@ const setHomeBeach = async (usr) => {
             //puts each location into an array
             let beaches = await db.collection('locations').find({$and: [{LATITUDE: {$lt: userLocale.latUpper}}, 
             {LATITUDE: {$gt: userLocale.latLower}}]}).toArray(); 
-            console.log(beaches.length)
-             
 
             //Holds converted beach distances
             const distances = []; 
@@ -52,17 +50,16 @@ const setHomeBeach = async (usr) => {
             beaches.forEach((beach) => {
                 let mi = (Math.cos(beach.LATITUDE * (Math.PI/180))) * 69.172
                 let dist = mi * userMi / 2
-                distances.push({id: beach.ID, distance: dist}); 
-                //console.log(beach)               
+                distances.push({id: beach.ID, distance: dist});                
             })
+
             //Sorts beaches by distance (shortest to longest)
             distances.sort((a,b) => {
                 return a.distance - b.distance
             })
+
             //Returns the first beach from the sorted array
             let homeBeach = beaches.filter(beach => beach.ID == distances[0].id)
-            console.log(homeBeach)
-            
 
             //Update to user object
             user.homeBeach = homeBeach[0].ID;
@@ -74,10 +71,8 @@ const setHomeBeach = async (usr) => {
                     homeBeach: user.homeBeach,
                     homeBeachName: user.homeBeachName
                 }}, {new: true, upsert: true})
-                console.log(nUser)
             
             //Returns updated user object to front end
-            console.log(user)
             return user; 
         }
         catch(err){console.log(err)}
