@@ -163,15 +163,15 @@ const LocationType = new GraphQLObjectType({
 // Future UserType for logged in user control
 
 const UserType = new GraphQLObjectType({
-  name: "User", 
+  name: "User",
   fields: () => ({
-    cognitoUserId: { type: GraphQLID },
+    cognitoUserId: { type: GraphQLString },
     fullName: { type: new GraphQLNonNull(GraphQLString) },
     email: { type: new GraphQLNonNull(GraphQLString) },
     homeBeach: { type: GraphQLID },
     homeBeachName: { type: GraphQLString },
     longitude: { type: GraphQLFloat },
-    latitude: {type: GraphQLFloat}
+    latitude: { type: GraphQLFloat }
   })
 });
 
@@ -191,6 +191,16 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args) {
         return User.findById(args.id);
       }
+    },
+    filterUser: {
+      type: new GraphQLList(UserType),
+      args: getGraphQLQueryArgs(UserType),
+      resolve: getMongoDbQueryResolver(
+        UserType,
+        async (filter, projection, options, source, args, context) => {
+          return await User.find(filter, projection, options);
+        }
+      )
     },
     filter: {
       type: new GraphQLList(LocationType),
@@ -223,13 +233,13 @@ const Mutation = new GraphQLObjectType({
     addUser: {
       type: UserType,
       args: {
-        cognitoUserId: { type: new GraphQLNonNull(GraphQLID) },
+        cognitoUserId: { type: new GraphQLNonNull(GraphQLString) },
         fullName: { type: new GraphQLNonNull(GraphQLString) },
         email: { type: new GraphQLNonNull(GraphQLString) },
         homeBeach: { type: GraphQLID },
         homeBeachName: { type: GraphQLString },
         longitude: { type: GraphQLFloat },
-        latitude: {type: GraphQLFloat}
+        latitude: { type: GraphQLFloat }
       },
       resolve(parent, args) {
         let user = new User({

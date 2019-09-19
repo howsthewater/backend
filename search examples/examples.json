@@ -63,3 +63,25 @@ _id, ID, DISTRICT, CountyNum, COUNTY, NameMobileWeb, LocationMobileWeb, Descript
 ** "No" means the beach DOES NOT have the amenity.
 ** "" we do not yet know what "" means.
 
+{filterUser(filter: {cognitoUserId: {EQ: "12_3456"}}){
+  cognitoUserId
+  fullName
+  email
+  homeBeach
+  homeBeachName
+  latitude
+  longitude
+}}
+
+
+{
+  filterUser(filter: {fullName: {EQ: "bob johnson"}}){
+    cognitoUserId
+    fullName
+    email
+    homeBeach
+    homeBeachName
+    latitude
+    longitude
+  }
+}
