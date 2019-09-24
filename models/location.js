@@ -48,7 +48,7 @@ const LocationSchema = new Schema({
     required: false
   },
   RESTROOMS: {
-    type: Number,
+    type: String,
     required: false
   },
   VISTOR_CTR: {
