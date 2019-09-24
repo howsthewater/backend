@@ -5,7 +5,9 @@ const Location = require("../models/location.js");
 const fetch = require("node-fetch");
 const wwo = require("../api/worldWeatherOnline");
 const sg = require("../api/stormGlass");
+const hb = require("../api/homeBeach.js")
 const url = require("url");
+
 
 const {
   getGraphQLQueryArgs,
@@ -24,7 +26,8 @@ const {
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLFloat
+  GraphQLFloat,
+  GraphQLInterfaceType
 } = graphql;
 
 const LocationType = new GraphQLObjectType({
@@ -241,7 +244,7 @@ const Mutation = new GraphQLObjectType({
         longitude: { type: GraphQLFloat },
         latitude: { type: GraphQLFloat }
       },
-      resolve(parent, args) {
+       async resolve(parent, args) {
         let user = new User({
           cognitoUserId: args.cognitoUserId,
           fullName: args.fullName,
@@ -249,13 +252,18 @@ const Mutation = new GraphQLObjectType({
           homeBeach: args.homeBeach,
           homeBeachName: args.homeBeachName,
           longitude: args.longitude,
-          latitude: args.latitude
+          latitude: args.latitude          
         });
-        return user.save();
+       
+        let mUser = await hb(user); 
+        let newUser = new User(mUser); 
+        return newUser.save(); 
       }
     }
   }
 });
+
+
 
 module.exports = new GraphQLSchema({
   query: RootQuery,

@@ -6,7 +6,7 @@ require("dotenv").config();
 
 // connect to mongodb
 
-mongoose.connect(process.env.MONGO_API, { useNewUrlParser: true });
+mongoose.connect(process.env.MONGO_API, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.once("open", () => {
   console.log("connected to database");
 });
