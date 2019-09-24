@@ -15,12 +15,10 @@ const assert = require('assert');
 
 //Requires one argument. A user object with at least a 'latitude' and 'longitude'
 const setHomeBeach = async (usr) => {
-    let newUser = usr;
-     
-    console.log("homebeach.js first log" + newUser)
+    let newUser = usr;     
+    
     //Used to compare user's location to beach locations
-    const userMi = (Math.cos(newUser.latitude * (Math.PI/180))) * 69.172
-    console.log("homebeach.js second log" + userMi)
+    const userMi = (Math.cos(newUser.latitude * (Math.PI/180))) * 69.172  
 
     //Sets constraints for result set
     const userLocale = {
