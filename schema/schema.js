@@ -5,9 +5,8 @@ const Location = require("../models/location.js");
 const fetch = require("node-fetch");
 const wwo = require("../api/worldWeatherOnline");
 const sg = require("../api/stormGlass");
-const hb = require("../api/homeBeach.js")
+const hb = require("../api/homeBeach.js");
 const url = require("url");
-
 
 const {
   getGraphQLQueryArgs,
@@ -244,7 +243,7 @@ const Mutation = new GraphQLObjectType({
         longitude: { type: GraphQLFloat },
         latitude: { type: GraphQLFloat }
       },
-       async resolve(parent, args) {
+      async resolve(parent, args) {
         let user = new User({
           cognitoUserId: args.cognitoUserId,
           fullName: args.fullName,
@@ -252,18 +251,49 @@ const Mutation = new GraphQLObjectType({
           homeBeach: args.homeBeach,
           homeBeachName: args.homeBeachName,
           longitude: args.longitude,
-          latitude: args.latitude          
+          latitude: args.latitude
         });
-       
-        let mUser = await hb(user); 
-        let newUser = new User(mUser); 
-        return newUser.save(); 
+
+        let mUser = await hb(user);
+        let newUser = new User(mUser);
+        return newUser.save();
+      }
+    },
+    update: {
+      type: UserType,
+      args: {
+        cognitoUserId: { type: new GraphQLNonNull(GraphQLString) },
+        fullName: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        homeBeach: { type: GraphQLID },
+        homeBeachName: { type: GraphQLString },
+        longitude: { type: GraphQLFloat },
+        latitude: { type: GraphQLFloat }
+      },
+      resolve(root, args) {
+        return new Promise((resolve, reject) => {
+          User.findOneAndUpdate(
+            { cognitoUserId: args.cognitoUserId },
+            {
+              $set: {
+                fullName: args.fullName,
+                email: args.email,
+                homeBeach: args.homeBeach,
+                homeBeachName: args.homeBeachName,
+                longitude: args.longitude,
+                latitude: args.latitude
+              }
+            },
+            { new: true, useFindAndModify: false }
+          ).exec((err, res) => {
+            if (err) reject(err);
+            else resolve();
+          });
+        });
       }
     }
   }
 });
-
-
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
