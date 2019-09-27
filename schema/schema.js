@@ -259,6 +259,30 @@ const Mutation = new GraphQLObjectType({
         let newUser = new User(mUser); 
         return newUser.save(); 
       }
+    },
+    update: {
+      type: UserType,
+      args: {
+        cognitoUserId: { type: new GraphQLNonNull(GraphQLString) },
+        fullName: { type: GraphQLString },
+        email: { type: GraphQLString },
+        homeBeach: { type: GraphQLID },
+        homeBeachName: { type: GraphQLString },
+        longitude: { type: GraphQLFloat },
+        latitude: { type: GraphQLFloat }
+      },
+      resolve(root, args) {
+        return new Promise((resolve, reject) => {
+          User.findOneAndUpdate({ cognitoUserId: args.cognitoUserId }, args, {
+            new: true,
+            useFindAndModify: false
+          }).exec((err, res) => {
+            console.log(res);
+            if (err) reject(err);
+            else resolve(res);
+          });
+        });
+      }
     }
   }
 });
