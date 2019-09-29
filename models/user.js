@@ -32,6 +32,23 @@ const UserSchema = new Schema({
   latitude: {
     type: Number,
     required: false
+  },
+
+  phoneInput: {
+    type: Number,
+    required: false
+  },
+  regionInput: {
+    type: String,
+    required: false
+  },
+  beachInput: {
+    type: String,
+    required: false
+  },
+  persona: {
+    type: String,
+    required: false
   }
 });
 
