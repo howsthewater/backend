@@ -174,7 +174,7 @@ const UserType = new GraphQLObjectType({
     homeBeachName: { type: GraphQLString },
     longitude: { type: GraphQLFloat },
     latitude: { type: GraphQLFloat },
-    phoneInput: { type: GraphQLFloat },
+    phoneInput: { type: GraphQLString },
     regionInput: { type: GraphQLString },
     beachInput: { type: GraphQLString },
     persona: { type: GraphQLString }
@@ -246,7 +246,7 @@ const Mutation = new GraphQLObjectType({
         homeBeachName: { type: GraphQLString },
         longitude: { type: GraphQLFloat },
         latitude: { type: GraphQLFloat },
-        phoneInput: { type: GraphQLFloat },
+        phoneInput: { type: GraphQLString },
         regionInput: { type: GraphQLString },
         beachInput: { type: GraphQLString },
         persona: { type: GraphQLString }
@@ -281,7 +281,7 @@ const Mutation = new GraphQLObjectType({
         homeBeachName: { type: GraphQLString },
         longitude: { type: GraphQLFloat },
         latitude: { type: GraphQLFloat },
-        phoneInput: { type: GraphQLFloat },
+        phoneInput: { type: GraphQLString },
         regionInput: { type: new GraphQLNonNull(GraphQLString) },
         beachInput: { type: new GraphQLNonNull(GraphQLString) },
         persona: { type: new GraphQLNonNull(GraphQLString) }

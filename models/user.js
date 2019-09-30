@@ -35,7 +35,7 @@ const UserSchema = new Schema({
   },
 
   phoneInput: {
-    type: Number,
+    type: String,
     required: false
   },
   regionInput: {
