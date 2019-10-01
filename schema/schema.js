@@ -282,9 +282,9 @@ const Mutation = new GraphQLObjectType({
         longitude: { type: GraphQLFloat },
         latitude: { type: GraphQLFloat },
         phoneInput: { type: GraphQLString },
-        regionInput: { type: new GraphQLNonNull(GraphQLString) },
-        beachInput: { type: new GraphQLNonNull(GraphQLString) },
-        persona: { type: new GraphQLNonNull(GraphQLString) }
+        regionInput: { type: (GraphQLString) },
+        beachInput: { type: (GraphQLString) },
+        persona: { type: (GraphQLString) }
       },
       resolve(root, args) {
         return new Promise((resolve, reject) => {
