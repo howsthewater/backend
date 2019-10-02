@@ -5,9 +5,8 @@ const Location = require("../models/location.js");
 const fetch = require("node-fetch");
 const wwo = require("../api/worldWeatherOnline");
 const sg = require("../api/stormGlass");
-const hb = require("../api/homeBeach.js")
+const hb = require("../api/homeBeach.js");
 const url = require("url");
-
 
 const {
   getGraphQLQueryArgs,
@@ -174,7 +173,11 @@ const UserType = new GraphQLObjectType({
     homeBeach: { type: GraphQLID },
     homeBeachName: { type: GraphQLString },
     longitude: { type: GraphQLFloat },
-    latitude: { type: GraphQLFloat }
+    latitude: { type: GraphQLFloat },
+    phoneInput: { type: GraphQLString },
+    regionInput: { type: GraphQLString },
+    beachInput: { type: GraphQLString },
+    persona: { type: GraphQLString }
   })
 });
 
@@ -242,9 +245,13 @@ const Mutation = new GraphQLObjectType({
         homeBeach: { type: GraphQLID },
         homeBeachName: { type: GraphQLString },
         longitude: { type: GraphQLFloat },
-        latitude: { type: GraphQLFloat }
+        latitude: { type: GraphQLFloat },
+        phoneInput: { type: GraphQLString },
+        regionInput: { type: GraphQLString },
+        beachInput: { type: GraphQLString },
+        persona: { type: GraphQLString }
       },
-       async resolve(parent, args) {
+      async resolve(parent, args) {
         let user = new User({
           cognitoUserId: args.cognitoUserId,
           fullName: args.fullName,
@@ -252,12 +259,16 @@ const Mutation = new GraphQLObjectType({
           homeBeach: args.homeBeach,
           homeBeachName: args.homeBeachName,
           longitude: args.longitude,
-          latitude: args.latitude          
+          latitude: args.latitude,
+          phoneInput: args.phoneInput,
+          regionInput: args.regionInput,
+          beachInput: args.beachInput,
+          persona: args.persona
         });
-       
-        let mUser = await hb(user); 
-        let newUser = new User(mUser); 
-        return newUser.save(); 
+
+        let mUser = await hb(user);
+        let newUser = new User(mUser);
+        return newUser.save();
       }
     },
     update: {
@@ -269,14 +280,27 @@ const Mutation = new GraphQLObjectType({
         homeBeach: { type: GraphQLID },
         homeBeachName: { type: GraphQLString },
         longitude: { type: GraphQLFloat },
-        latitude: { type: GraphQLFloat }
+        latitude: { type: GraphQLFloat },
+        phoneInput: { type: GraphQLString },
+        regionInput: { type: (GraphQLString) },
+        beachInput: { type: (GraphQLString) },
+        persona: { type: (GraphQLString) }
       },
       resolve(root, args) {
         return new Promise((resolve, reject) => {
-          User.findOneAndUpdate({ cognitoUserId: args.cognitoUserId }, args, {
-            new: true,
-            useFindAndModify: false
-          }).exec((err, res) => {
+          User.findOneAndUpdate(
+            {
+              cognitoUserId: args.cognitoUserId
+              // regionInput: args.regionInput,
+              // beachInput: args.beachInput,
+              // persona: args.persona
+            },
+            args,
+            {
+              new: true,
+              useFindAndModify: false
+            }
+          ).exec((err, res) => {
             console.log(res);
             if (err) reject(err);
             else resolve(res);
@@ -286,8 +310,6 @@ const Mutation = new GraphQLObjectType({
     }
   }
 });
-
-
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
