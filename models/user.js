@@ -49,6 +49,10 @@ const UserSchema = new Schema({
   persona: {
     type: String,
     required: false
+  },
+  favoriteBeach: {
+    type: String,
+    required: false
   }
 });
 
