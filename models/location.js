@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema,
+  ObjectId = Schema.ObjectId;
 var Float = require("mongoose-float").loadType(mongoose);
 
 const LocationSchema = new Schema({
@@ -167,9 +168,25 @@ const LocationSchema = new Schema({
     type: String,
     required: false
   },
-    REGION: {
+  REGION: {
     type: String,
     required: false
-  }
+  },
+  Ratings: [
+    {
+      _id: {
+        type: ObjectId,
+        required: false
+      },
+      user: {
+        type: Number,
+        required: false
+      },
+      rating: {
+        type: Number,
+        required: false
+      }
+    }
+  ]
 });
 module.exports = mongoose.model("Location", LocationSchema);

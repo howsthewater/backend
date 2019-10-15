@@ -29,6 +29,15 @@ const {
   GraphQLInterfaceType
 } = graphql;
 
+let ratingsType = new GraphQLObjectType({
+  name: "Object",
+  fields: () => ({
+    _id: { type: GraphQLID },
+    user: { type: GraphQLInt },
+    rating: { type: GraphQLInt }
+  })
+});
+
 const LocationType = new GraphQLObjectType({
   name: "Location",
   fields: () => ({
@@ -73,6 +82,7 @@ const LocationType = new GraphQLObjectType({
     Bch_whlchr: { type: new GraphQLNonNull(GraphQLString) },
     BIKE_PATH: { type: new GraphQLNonNull(GraphQLString) },
     BT_FACIL_TYPE: { type: new GraphQLNonNull(GraphQLString) },
+    Ratings: { type: new GraphQLList(ratingsType) },
 
     WwoAPI: {
       type: wwo.WwoAPIType,
@@ -282,9 +292,9 @@ const Mutation = new GraphQLObjectType({
         longitude: { type: GraphQLFloat },
         latitude: { type: GraphQLFloat },
         phoneInput: { type: GraphQLString },
-        regionInput: { type: (GraphQLString) },
-        beachInput: { type: (GraphQLString) },
-        persona: { type: (GraphQLString) }
+        regionInput: { type: GraphQLString },
+        beachInput: { type: GraphQLString },
+        persona: { type: GraphQLString }
       },
       resolve(root, args) {
         return new Promise((resolve, reject) => {
