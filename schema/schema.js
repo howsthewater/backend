@@ -84,7 +84,7 @@ const LocationType = new GraphQLObjectType({
           key: process.env.WWO_API,
           q: ` ${parent.LATITUDE}, ${parent.LONGITUDE}`,
           format: "json",
-          num_of_days: 1,
+          num_of_days: 10, // change this to more number of days
           fx: "yes",
           moonrise: "yes",
           tp: 24
@@ -113,7 +113,7 @@ const LocationType = new GraphQLObjectType({
         const params = new URLSearchParams({
           lat: parent.LATITUDE,
           lng: parent.LONGITUDE,
-          start: time,
+          start: time, // Gives the forecast based ona start time and end time
           end: endTime
         });
         myURL.search = params;
@@ -133,17 +133,26 @@ const LocationType = new GraphQLObjectType({
     StormAPI: {
       type: sg.StormAPIType,
       resolve(parent, args) {
-        const time = Math.floor(new Date() / 1000);
-        console.log(time);
+        const currentDate = new Date();
+        const time = Math.floor(
+          (currentDate - 1000 * 60 * 60 * 24 * 10) / 1000
+        );
+        const currtime = Math.floor(currentDate / 1000);
+        console.log(
+          "::STORM API TIME IS :: START TIME FOR STORM API is " + time
+        );
+        console.log(
+          "::STORM API TIME IS :: CURRENT TIME FOR STORM API is " + currtime
+        );
 
         const myURL = new URL(`https://api.stormglass.io/v1/weather/point`);
         const params = new URLSearchParams({
           lat: parent.LATITUDE,
           lng: parent.LONGITUDE,
-          start: time,
-          end: time,
+          start: time, // Forecast time lines
+          end: currtime,
           source: "sg",
-          params: "waterTemperature,waveHeight,swellHeight"
+          params: "waterTemperature,waveHeight,swellHeight,windSpeed"
         });
         myURL.search = params;
 
