@@ -174,6 +174,14 @@ const LocationType = new GraphQLObjectType({
 
 // Future UserType for logged in user control
 
+let favoriteType = new GraphQLInputObjectType({
+  name: "favoriteType",
+  fields: () => ({
+    cognitoUserId: { type: new GraphQLNonNull(GraphQLString) },
+    name: { type: GraphQLString() }
+  })
+});
+
 const UserType = new GraphQLObjectType({
   name: "User",
   fields: () => ({
@@ -187,7 +195,8 @@ const UserType = new GraphQLObjectType({
     phoneInput: { type: GraphQLString },
     regionInput: { type: GraphQLString },
     beachInput: { type: GraphQLString },
-    persona: { type: GraphQLString }
+    persona: { type: GraphQLString },
+    favoriteBeach: { type: new GraphQLList(favoriteType) }
   })
 });
 
@@ -206,6 +215,13 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return User.findById(args.id);
+      }
+    },
+    favoriteBeach: {
+      type: new GraphQLList(favoriteType),
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return favoriteType.findById(args.id);
       }
     },
     filterUser: {
@@ -259,7 +275,8 @@ const Mutation = new GraphQLObjectType({
         phoneInput: { type: GraphQLString },
         regionInput: { type: GraphQLString },
         beachInput: { type: GraphQLString },
-        persona: { type: GraphQLString }
+        persona: { type: GraphQLString },
+        favoriteBeach: { type: new GraphQLList(favoriteType) }
       },
       async resolve(parent, args) {
         let user = new User({
@@ -273,7 +290,8 @@ const Mutation = new GraphQLObjectType({
           phoneInput: args.phoneInput,
           regionInput: args.regionInput,
           beachInput: args.beachInput,
-          persona: args.persona
+          persona: args.persona,
+          favoriteBeach: args.favoriteType
         });
 
         let mUser = await hb(user);
@@ -294,16 +312,14 @@ const Mutation = new GraphQLObjectType({
         phoneInput: { type: GraphQLString },
         regionInput: { type: GraphQLString },
         beachInput: { type: GraphQLString },
-        persona: { type: GraphQLString }
+        persona: { type: GraphQLString },
+        favoriteBeach: { type: new GraphQLList(favoriteType) }
       },
       resolve(root, args) {
         return new Promise((resolve, reject) => {
           User.findOneAndUpdate(
             {
               cognitoUserId: args.cognitoUserId
-              // regionInput: args.regionInput,
-              // beachInput: args.beachInput,
-              // persona: args.persona
             },
             args,
             {

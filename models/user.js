@@ -49,7 +49,15 @@ const UserSchema = new Schema({
   persona: {
     type: String,
     required: false
-  }
+  },
+  favoriteBeach: [
+    {
+      name: {
+        type: String,
+        required: false
+      }
+    }
+  ]
 });
 
 module.exports = mongoose.model("User", UserSchema);
