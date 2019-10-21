@@ -38,8 +38,9 @@ const StormAPIType = new GraphQLObjectType({
 });
 
 const HoursType = new GraphQLObjectType({
-  name: "Hours",
+  name: "hours",
   fields: () => ({
+    time: { type: GraphQLString },
     swellHeight: { type: new GraphQLList(swellHeightType) },
     waterTemperature: { type: new GraphQLList(waterTemperatureType) },
     waveHeight: { type: new GraphQLList(waveHeightType) },
