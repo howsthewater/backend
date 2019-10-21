@@ -113,7 +113,7 @@ const LocationType = new GraphQLObjectType({
         const params = new URLSearchParams({
           lat: parent.LATITUDE,
           lng: parent.LONGITUDE,
-          start: time, // Gives the forecast based ona start time and end time
+          start: time,
           end: endTime
         });
         myURL.search = params;
@@ -134,9 +134,12 @@ const LocationType = new GraphQLObjectType({
       type: sg.StormAPIType,
       resolve(parent, args) {
         const currentDate = new Date();
+        // Updated to get the information for 12 hours
         const time = Math.floor(
           (currentDate - 1000 * 60 * 60 * 24 * 0.5) / 1000
         );
+
+        // Gets the current time
         const currtime = Math.floor(currentDate / 1000);
         console.log(
           "::STORM API TIME IS :: START TIME FOR STORM API is " + time
