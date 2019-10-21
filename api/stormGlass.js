@@ -40,11 +40,11 @@ const StormAPIType = new GraphQLObjectType({
 const HoursType = new GraphQLObjectType({
   name: "hours",
   fields: () => ({
-    time: { type: GraphQLString },
+    time: { type: GraphQLString }, // Added time
     swellHeight: { type: new GraphQLList(swellHeightType) },
     waterTemperature: { type: new GraphQLList(waterTemperatureType) },
     waveHeight: { type: new GraphQLList(waveHeightType) },
-    windSpeed: { type: new GraphQLList(windSpeedType) }
+    windSpeed: { type: new GraphQLList(windSpeedType) } // Added windSpeed
   })
 });
 
@@ -72,6 +72,7 @@ const waveHeightType = new GraphQLObjectType({
   })
 });
 
+//Wind speed Type defines the format for windSpeed data got from the API
 const windSpeedType = new GraphQLObjectType({
   name: "windSpeed",
   fields: () => ({
