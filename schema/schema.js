@@ -134,7 +134,9 @@ const LocationType = new GraphQLObjectType({
       type: sg.StormAPIType,
       resolve(parent, args) {
         const currentDate = new Date();
-        const time = Math.floor((currentDate - 1000 * 60 * 60 * 24 * 1) / 1000);
+        const time = Math.floor(
+          (currentDate - 1000 * 60 * 60 * 24 * 0.5) / 1000
+        );
         const currtime = Math.floor(currentDate / 1000);
         console.log(
           "::STORM API TIME IS :: START TIME FOR STORM API is " + time
