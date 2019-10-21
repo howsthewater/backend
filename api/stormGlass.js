@@ -1,9 +1,5 @@
 const graphql = require("graphql");
-const {
-  GraphQLObjectType,
-  GraphQLString,
-  GraphQLList,
-} = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLList } = graphql;
 
 // TideAPI - (also Stormglass API)
 
@@ -46,7 +42,8 @@ const HoursType = new GraphQLObjectType({
   fields: () => ({
     swellHeight: { type: new GraphQLList(swellHeightType) },
     waterTemperature: { type: new GraphQLList(waterTemperatureType) },
-    waveHeight: { type: new GraphQLList(waveHeightType) }
+    waveHeight: { type: new GraphQLList(waveHeightType) },
+    windSpeed: { type: new GraphQLList(windSpeedType) }
   })
 });
 
@@ -68,6 +65,14 @@ const waterTemperatureType = new GraphQLObjectType({
 
 const waveHeightType = new GraphQLObjectType({
   name: "waveHeight",
+  fields: () => ({
+    source: { type: GraphQLString },
+    value: { type: GraphQLString }
+  })
+});
+
+const windSpeedType = new GraphQLObjectType({
+  name: "windSpeed",
   fields: () => ({
     source: { type: GraphQLString },
     value: { type: GraphQLString }
