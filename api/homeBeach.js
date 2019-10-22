@@ -2,15 +2,17 @@ const MongoClient = require('mongodb').MongoClient;
  
 const assert = require('assert'); 
 
+
+
 //User object to be recieved. (Test object)
 // const user = {
-//     cognitoUserId: "987654231",
-//     fullName: "TestUser2",
-//     email: "test2@email.com",
+//     cognitoUserId: "9876542312",
+//     fullName: "TestUser22",
+//     email: "test22@email.com",
 //     homeBeach: 0,
 //     homeBeachName: "",
 //     longitude:  -117.596620,
-//     latitude: 35.621682
+//     latitude: 12.621682
 // }
 
 //Requires one argument. A user object with at least a 'latitude' and 'longitude'
@@ -26,9 +28,21 @@ const setHomeBeach = async (usr) => {
         latUpper: newUser.latitude + 0.1, 
     };     
 
-    const client = new MongoClient('mongodb+srv://ant:ant123@cluster0-bse6j.mongodb.net/howsthewater?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true});
+    const client = new MongoClient(process.env.MONGO_API, { useNewUrlParser: true, useUnifiedTopology: true});
     
     const modifyUser = new Promise((resolve, reject) => {
+
+        if(newUser.latitude > 41.99){
+            newUser.homeBeach = 1
+            newUser.homeBeachName = "Pelican State Beach"            
+            return resolve(newUser)
+            
+        }
+        else if(newUser.latitude < 32){
+            newUser.homeBeach = 1636;
+            newUser.homeBeachName = "Border Field State Park";
+            return resolve(newUser)
+        }
         
         client.connect(async function(err, client){
         //error handling during connection
@@ -68,10 +82,6 @@ const setHomeBeach = async (usr) => {
                 newUser.homeBeach = homeBeach[0].ID;
                 newUser.homeBeachName = homeBeach[0].NameMobileWeb;
                 
-                
-                
-                 
-                
                 //Update to user entry in DB - Not currently needed in this iteration
                 // let nUser = await db.collection('users').updateOne({cognitoUserId:{$eq: user.cognitoUserId}},
                 //     {$set: {
@@ -101,6 +111,8 @@ const setHomeBeach = async (usr) => {
             
     
 }   
+
+//setHomeBeach(user)
 
 
 module.exports = setHomeBeach; 
