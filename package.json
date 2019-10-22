@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "server": "node app.js",
     "client": "npm start",
     "dev": "concurrently --names \"app,client\" \"npm run app --silent\" \"npm run client --silent\""
@@ -25,6 +25,7 @@
     "mongoose": "^5.6.9",
     "mongoose-float": "^1.0.4",
     "node-fetch": "^2.6.0",
+    "nodemon": "^1.19.4",
     "npm": "^6.11.2"
   }
 }
