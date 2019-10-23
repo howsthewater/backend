@@ -26,8 +26,18 @@ const {
   GraphQLList,
   GraphQLNonNull,
   GraphQLFloat,
+  GraphQLInputObjectType,
   GraphQLInterfaceType
 } = graphql;
+
+const ratingsType = new GraphQLObjectType({
+  name: "Object",
+  fields: () => ({
+    _id: { type: GraphQLID },
+    user: { type: GraphQLInt },
+    rating: { type: GraphQLInt }
+  })
+});
 
 const LocationType = new GraphQLObjectType({
   name: "Location",
@@ -73,6 +83,7 @@ const LocationType = new GraphQLObjectType({
     Bch_whlchr: { type: new GraphQLNonNull(GraphQLString) },
     BIKE_PATH: { type: new GraphQLNonNull(GraphQLString) },
     BT_FACIL_TYPE: { type: new GraphQLNonNull(GraphQLString) },
+    Ratings: { type: new GraphQLList(ratingsType) },
 
     WwoAPI: {
       type: wwo.WwoAPIType,
@@ -246,6 +257,22 @@ const RootQuery = new GraphQLObjectType({
   }
 });
 
+const ratingsTypeMut = new GraphQLInputObjectType({
+  name: "beachRatings",
+  fields: () => ({
+    _id: { type: GraphQLID },
+    user: { type: GraphQLInt },
+    rating: { type: GraphQLInt }
+  })
+});
+
+const favbeachTypeMut = new GraphQLInputObjectType({
+  name: "beachRatings",
+  fields: () => ({
+    name: { type: GraphQLID }
+  })
+});
+
 const Mutation = new GraphQLObjectType({
   name: "Mutation",
   fields: {
@@ -286,7 +313,7 @@ const Mutation = new GraphQLObjectType({
         return newUser.save();
       }
     },
-    update: {
+    updateUser: {
       type: UserType,
       args: {
         cognitoUserId: { type: new GraphQLNonNull(GraphQLString) },
@@ -300,13 +327,78 @@ const Mutation = new GraphQLObjectType({
         regionInput: { type: GraphQLString },
         beachInput: { type: GraphQLString },
         persona: { type: GraphQLString },
-        favoriteBeach: { type: GraphQLString }
+        favoriteBeach: { type: favbeachTypeMut }
       },
       resolve(root, args) {
         return new Promise((resolve, reject) => {
           User.findOneAndUpdate(
             {
               cognitoUserId: args.cognitoUserId
+            },
+            args,
+            {
+              new: true,
+              useFindAndModify: false
+            }
+          ).exec((err, res) => {
+            console.log(res);
+            if (err) reject(err);
+            else resolve(res);
+          });
+        });
+      }
+    },
+    updateBeach: {
+      type: LocationType,
+      args: {
+        ID: { type: GraphQLID },
+        DISTRICT: { type: GraphQLString },
+        CountyNum: { type: GraphQLInt },
+        COUNTY: { type: GraphQLString },
+        NameMobileWeb: { type: GraphQLString },
+        LocationMobileWeb: { type: GraphQLString },
+        DescriptionMobileWeb: { type: GraphQLString },
+        PHONE_NMBR: { type: GraphQLString },
+        PARKING: { type: GraphQLString },
+        DSABLDACSS: { type: GraphQLString },
+        RESTROOMS: { type: GraphQLString },
+        VISTOR_CTR: { type: GraphQLString },
+        DOG_FRIENDLY: { type: GraphQLString },
+        EZ4STROLLERS: { type: GraphQLString },
+        PCNC_AREA: { type: GraphQLString },
+        CAMPGROUND: { type: GraphQLString },
+        SNDY_BEACH: { type: GraphQLString },
+        DUNES: { type: GraphQLString },
+        RKY_SHORE: { type: GraphQLString },
+        BLUFF: { type: GraphQLString },
+        STRS_BEACH: { type: GraphQLString },
+        PTH_BEACH: { type: GraphQLString },
+        BLFTP_TRLS: { type: GraphQLString },
+        BLFTP_PRK: { type: GraphQLString },
+        WLDLFE_VWG: { type: GraphQLString },
+        TIDEPOOL: { type: GraphQLString },
+        VOLLEYBALL: { type: GraphQLString },
+        FISHING: { type: GraphQLString },
+        BOATING: { type: GraphQLString },
+        LIST_ORDER: { type: GraphQLString },
+        GEOGR_AREA: { type: GraphQLString },
+        LATITUDE: { type: GraphQLFloat },
+        LONGITUDE: { type: GraphQLFloat },
+        REGION: { type: GraphQLString },
+        Photo_1: { type: GraphQLString },
+        Photo_2: { type: GraphQLString },
+        Photo_3: { type: GraphQLString },
+        Photo_4: { type: GraphQLString },
+        Bch_whlchr: { type: GraphQLString },
+        BIKE_PATH: { type: GraphQLString },
+        BT_FACIL_TYPE: { type: GraphQLString }
+        //        Ratings: { type: ratingsTypeMut }
+      },
+      resolve(root, args) {
+        return new Promise((resolve, reject) => {
+          User.findOneAndUpdate(
+            {
+              NameMobileWeb: args.NameMobileWeb
             },
             args,
             {
