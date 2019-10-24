@@ -330,6 +330,9 @@ const Mutation = new GraphQLObjectType({
         favoriteBeach: { type: GraphQLString }
       },
       resolve(root, args) {
+        console.log(
+          "SCHEMA :: USER UPDATE :: ARGS ARE :: " + JSON.stringify(args)
+        );
         return new Promise((resolve, reject) => {
           User.findOneAndUpdate(
             {
@@ -341,7 +344,7 @@ const Mutation = new GraphQLObjectType({
               useFindAndModify: false
             }
           ).exec((err, res) => {
-            console.log(res);
+            console.log(" SCHEMA:: USER UPDATE:: RESPONSE IS ::  " + res);
             if (err) reject(err);
             else resolve(res);
           });
