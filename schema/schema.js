@@ -26,8 +26,18 @@ const {
   GraphQLList,
   GraphQLNonNull,
   GraphQLFloat,
-  
+  GraphQLInputObjectType,
+  GraphQLInterfaceType
 } = graphql;
+
+const ratingsType = new GraphQLObjectType({
+  name: "Object",
+  fields: () => ({
+    _id: { type: GraphQLID },
+    user: { type: GraphQLInt },
+    rating: { type: GraphQLInt }
+  })
+});
 
 const LocationType = new GraphQLObjectType({
   name: "Location",
@@ -73,6 +83,7 @@ const LocationType = new GraphQLObjectType({
     Bch_whlchr: { type: new GraphQLNonNull(GraphQLString) },
     BIKE_PATH: { type: new GraphQLNonNull(GraphQLString) },
     BT_FACIL_TYPE: { type: new GraphQLNonNull(GraphQLString) },
+    Ratings: { type: new GraphQLList(ratingsType) },
 
     WwoAPI: {
       type: wwo.WwoAPIType,
@@ -133,17 +144,29 @@ const LocationType = new GraphQLObjectType({
     StormAPI: {
       type: sg.StormAPIType,
       resolve(parent, args) {
-        const time = Math.floor(new Date() / 1000);
-        console.log(time);
+        const currentDate = new Date();
+        // Updated to get the information for 12 hours
+        const time = Math.floor(
+          (currentDate - 1000 * 60 * 60 * 24 * 0.5) / 1000
+        );
+
+        // Gets the current time
+        const currtime = Math.floor(currentDate / 1000);
+        console.log(
+          "::STORM API TIME IS :: START TIME FOR STORM API is " + time
+        );
+        console.log(
+          "::STORM API TIME IS :: CURRENT TIME FOR STORM API is " + currtime
+        );
 
         const myURL = new URL(`https://api.stormglass.io/v1/weather/point`);
         const params = new URLSearchParams({
           lat: parent.LATITUDE,
           lng: parent.LONGITUDE,
-          start: time,
-          end: time,
+          start: time, // Forecast time lines
+          end: currtime,
           source: "sg",
-          params: "waterTemperature,waveHeight,swellHeight"
+          params: "waterTemperature,waveHeight,swellHeight,windSpeed"
         });
         myURL.search = params;
 
@@ -177,7 +200,8 @@ const UserType = new GraphQLObjectType({
     phoneInput: { type: GraphQLString },
     regionInput: { type: GraphQLString },
     beachInput: { type: GraphQLString },
-    persona: { type: GraphQLString }
+    persona: { type: GraphQLString },
+    favoriteBeach: { type: GraphQLString }
   })
 });
 
@@ -240,6 +264,22 @@ const RootQuery = new GraphQLObjectType({
   }
 });
 
+// const ratingsTypeMut = new GraphQLInputObjectType({
+//   name: "beachRatings",
+//   fields: () => ({
+//     _id: { type: GraphQLID },
+//     user: { type: GraphQLInt },
+//     rating: { type: GraphQLInt }
+//   })
+// });
+
+// const favbeachTypeMut = new GraphQLInputObjectType({
+//   name: "beachRatings",
+//   fields: () => ({
+//     name: { type: GraphQLID }
+//   })
+// });
+
 const Mutation = new GraphQLObjectType({
   name: "Mutation",
   fields: {
@@ -256,7 +296,8 @@ const Mutation = new GraphQLObjectType({
         phoneInput: { type: GraphQLString },
         regionInput: { type: GraphQLString },
         beachInput: { type: GraphQLString },
-        persona: { type: GraphQLString }
+        persona: { type: GraphQLString },
+        favoriteBeach: { type: GraphQLString }
       },
       async resolve(parent, args) {
         let user = new User({
@@ -270,7 +311,8 @@ const Mutation = new GraphQLObjectType({
           phoneInput: args.phoneInput,
           regionInput: args.regionInput,
           beachInput: args.beachInput,
-          persona: args.persona
+          persona: args.persona,
+          favoriteBeach: args.favoriteBeach
         });
 
         let mUser = await hb(user);
@@ -278,7 +320,7 @@ const Mutation = new GraphQLObjectType({
         return newUser.save();
       }
     },
-    update: {
+    updateUser: {
       type: UserType,
       args: {
         cognitoUserId: { type: new GraphQLNonNull(GraphQLString) },
@@ -289,18 +331,19 @@ const Mutation = new GraphQLObjectType({
         longitude: { type: GraphQLFloat },
         latitude: { type: GraphQLFloat },
         phoneInput: { type: GraphQLString },
-        regionInput: { type: (GraphQLString) },
-        beachInput: { type: (GraphQLString) },
-        persona: { type: (GraphQLString) }
+        regionInput: { type: GraphQLString },
+        beachInput: { type: GraphQLString },
+        persona: { type: GraphQLString },
+        favoriteBeach: { type: GraphQLString }
       },
       resolve(root, args) {
+        console.log(
+          "SCHEMA :: USER UPDATE :: ARGS ARE :: " + JSON.stringify(args)
+        );
         return new Promise((resolve, reject) => {
           User.findOneAndUpdate(
             {
               cognitoUserId: args.cognitoUserId
-              // regionInput: args.regionInput,
-              // beachInput: args.beachInput,
-              // persona: args.persona
             },
             args,
             {
@@ -308,13 +351,78 @@ const Mutation = new GraphQLObjectType({
               useFindAndModify: false
             }
           ).exec((err, res) => {
-            console.log(res);
+            console.log(" SCHEMA:: USER UPDATE:: RESPONSE IS ::  " + res);
             if (err) reject(err);
             else resolve(res);
           });
         });
       }
     }
+    // updateBeach: {
+    //   type: LocationType,
+    //   args: {
+    //     ID: { type: GraphQLID },
+    //     DISTRICT: { type: GraphQLString },
+    //     CountyNum: { type: GraphQLInt },
+    //     COUNTY: { type: GraphQLString },
+    //     NameMobileWeb: { type: GraphQLString },
+    //     LocationMobileWeb: { type: GraphQLString },
+    //     DescriptionMobileWeb: { type: GraphQLString },
+    //     PHONE_NMBR: { type: GraphQLString },
+    //     PARKING: { type: GraphQLString },
+    //     DSABLDACSS: { type: GraphQLString },
+    //     RESTROOMS: { type: GraphQLString },
+    //     VISTOR_CTR: { type: GraphQLString },
+    //     DOG_FRIENDLY: { type: GraphQLString },
+    //     EZ4STROLLERS: { type: GraphQLString },
+    //     PCNC_AREA: { type: GraphQLString },
+    //     CAMPGROUND: { type: GraphQLString },
+    //     SNDY_BEACH: { type: GraphQLString },
+    //     DUNES: { type: GraphQLString },
+    //     RKY_SHORE: { type: GraphQLString },
+    //     BLUFF: { type: GraphQLString },
+    //     STRS_BEACH: { type: GraphQLString },
+    //     PTH_BEACH: { type: GraphQLString },
+    //     BLFTP_TRLS: { type: GraphQLString },
+    //     BLFTP_PRK: { type: GraphQLString },
+    //     WLDLFE_VWG: { type: GraphQLString },
+    //     TIDEPOOL: { type: GraphQLString },
+    //     VOLLEYBALL: { type: GraphQLString },
+    //     FISHING: { type: GraphQLString },
+    //     BOATING: { type: GraphQLString },
+    //     LIST_ORDER: { type: GraphQLString },
+    //     GEOGR_AREA: { type: GraphQLString },
+    //     LATITUDE: { type: GraphQLFloat },
+    //     LONGITUDE: { type: GraphQLFloat },
+    //     REGION: { type: GraphQLString },
+    //     Photo_1: { type: GraphQLString },
+    //     Photo_2: { type: GraphQLString },
+    //     Photo_3: { type: GraphQLString },
+    //     Photo_4: { type: GraphQLString },
+    //     Bch_whlchr: { type: GraphQLString },
+    //     BIKE_PATH: { type: GraphQLString },
+    //     BT_FACIL_TYPE: { type: GraphQLString }
+    //     //        Ratings: { type: ratingsTypeMut }
+    //   },
+    //   resolve(root, args) {
+    //     return new Promise((resolve, reject) => {
+    //       User.findOneAndUpdate(
+    //         {
+    //           NameMobileWeb: args.NameMobileWeb
+    //         },
+    //         args,
+    //         {
+    //           new: true,
+    //           useFindAndModify: false
+    //         }
+    //       ).exec((err, res) => {
+    //         console.log(res);
+    //         if (err) reject(err);
+    //         else resolve(res);
+    //       });
+    //     });
+    //   }
+    // }
   }
 });
 
