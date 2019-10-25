@@ -26,7 +26,7 @@ const {
   GraphQLList,
   GraphQLNonNull,
   GraphQLFloat,
-  GraphQLInterfaceType
+  
 } = graphql;
 
 const LocationType = new GraphQLObjectType({
@@ -84,7 +84,7 @@ const LocationType = new GraphQLObjectType({
           key: process.env.WWO_API,
           q: ` ${parent.LATITUDE}, ${parent.LONGITUDE}`,
           format: "json",
-          num_of_days: 1,
+          num_of_days: 10, // change this to more number of days
           fx: "yes",
           moonrise: "yes",
           tp: 24
@@ -222,6 +222,13 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(LocationType),
       resolve(parent, args) {
         return Location.find({});
+      }
+    },
+    location:{
+      type: new GraphQLList(LocationType),
+      args: {ID: {type: GraphQLID}},
+      resolve(parent, args){
+        return Location.find({ID: args.ID}).catch(error =>{console.log(error)})
       }
     },
     users: {
