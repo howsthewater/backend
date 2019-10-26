@@ -50,10 +50,14 @@ const UserSchema = new Schema({
     type: String,
     required: false
   },
-  favoriteBeach: {
-    type: String,
-    required: false
-  }
+  favoriteBeach: [
+    {
+      name: {
+        type: String,
+        required: false
+      }
+    }
+  ]
 });
 
 module.exports = mongoose.model("User", UserSchema);

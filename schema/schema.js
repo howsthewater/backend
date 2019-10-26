@@ -186,6 +186,14 @@ const LocationType = new GraphQLObjectType({
 
 // Future UserType for logged in user control
 
+let favoriteType = new GraphQLInputObjectType({
+  name: "favoriteType",
+  fields: () => ({
+    cognitoUserId: { type: new GraphQLNonNull(GraphQLString) },
+    name: { type: GraphQLString() }
+  })
+});
+
 const UserType = new GraphQLObjectType({
   name: "User",
   fields: () => ({
@@ -200,7 +208,11 @@ const UserType = new GraphQLObjectType({
     regionInput: { type: GraphQLString },
     beachInput: { type: GraphQLString },
     persona: { type: GraphQLString },
+<<<<<<< HEAD
     favoriteBeach: { type: GraphQLString }
+=======
+    favoriteBeach: { type: new GraphQLList(favoriteType) }
+>>>>>>> 8499477ce76c971fe2e1eda065f0d5a61251d6c9
   })
 });
 
@@ -219,6 +231,13 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
         return User.findById(args.id);
+      }
+    },
+    favoriteBeach: {
+      type: new GraphQLList(favoriteType),
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return favoriteType.findById(args.id);
       }
     },
     filterUser: {
@@ -295,7 +314,11 @@ const Mutation = new GraphQLObjectType({
         regionInput: { type: GraphQLString },
         beachInput: { type: GraphQLString },
         persona: { type: GraphQLString },
+<<<<<<< HEAD
         favoriteBeach: { type: GraphQLString }
+=======
+        favoriteBeach: { type: new GraphQLList(favoriteType) }
+>>>>>>> 8499477ce76c971fe2e1eda065f0d5a61251d6c9
       },
       async resolve(parent, args) {
         let user = new User({
@@ -310,7 +333,11 @@ const Mutation = new GraphQLObjectType({
           regionInput: args.regionInput,
           beachInput: args.beachInput,
           persona: args.persona,
+<<<<<<< HEAD
           favoriteBeach: args.favoriteBeach
+=======
+          favoriteBeach: args.favoriteType
+>>>>>>> 8499477ce76c971fe2e1eda065f0d5a61251d6c9
         });
 
         let mUser = await hb(user);
@@ -332,7 +359,7 @@ const Mutation = new GraphQLObjectType({
         regionInput: { type: GraphQLString },
         beachInput: { type: GraphQLString },
         persona: { type: GraphQLString },
-        favoriteBeach: { type: GraphQLString }
+        favoriteBeach: { type: new GraphQLList(favoriteType) }
       },
       resolve(root, args) {
         console.log(
