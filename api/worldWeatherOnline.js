@@ -3,15 +3,19 @@ const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLList,
+  GraphQLInt,
 } = graphql;
 
 // World Weather Online API
 
+
+
 const WwoAPIType = new GraphQLObjectType({
   name: "WwoAPI",
   fields: () => ({
-    data: { type: DataType }
-  })
+    request: { type: GraphQLList(RequestType) },
+    weather: { type: GraphQLList(HourlyType) }    
+  }),  
 });
 
 const DataType = new GraphQLObjectType({
@@ -66,8 +70,10 @@ const AstronomyType = new GraphQLObjectType({
 });
 
 const HourlyType = new GraphQLObjectType({
-  name: "hourly",
+  name: "Hourly",
   fields: () => ({
+    waterTemperature: {type: GraphQLString},
+    swellHeight: {type: GraphQLString},
     windspeedMiles: { type: GraphQLString },
     windspeedKmph: { type: GraphQLString },
     winddir16Point: { type: GraphQLString },
