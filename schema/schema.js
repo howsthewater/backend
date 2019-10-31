@@ -2,6 +2,7 @@ const graphql = require("graphql");
 // const _ = require("lodash");
 const User = require("../models/user.js");
 const Location = require("../models/location.js");
+const Ratings = require("../models/ratings.js");
 const fetch = require("node-fetch");
 const wwo = require("../api/worldWeatherOnline");
 const sg = require("../api/stormGlass");
@@ -185,14 +186,24 @@ const LocationType = new GraphQLObjectType({
   })
 });
 
+// RatingsType
+
+const RatingsType = new GraphQLObjectType({
+  name: "Ratings",
+  fields: () => ({
+    Name: { type: GraphQLString },
+    avgRating: { type: GraphQLFloat }
+  })
+});
+
 // Future UserType for logged in user control
 
 const UserType = new GraphQLObjectType({
   name: "User",
   fields: () => ({
     cognitoUserId: { type: GraphQLString },
-    fullName: { type: new GraphQLNonNull(GraphQLString1) },
-    email: { type: new GraphQLNonNull(GraphQLString1) },
+    fullName: { type: new GraphQLNonNull(GraphQLString) },
+    email: { type: new GraphQLNonNull(GraphQLString) },
     homeBeach: { type: GraphQLID },
     homeBeachName: { type: GraphQLString },
     longitude: { type: GraphQLFloat },
@@ -213,6 +224,13 @@ const RootQuery = new GraphQLObjectType({
       args: { ID: { type: GraphQLID } },
       resolve(parent, args) {
         const result = Location.findById(args.ID);
+      }
+    },
+    rating: {
+      type: RatingsType,
+      args: { Name: { type: GraphQLString } },
+      resolve(parent, args) {
+        return Ratings.findOne({ Name: args.Name });
       }
     },
     user: {
@@ -248,6 +266,12 @@ const RootQuery = new GraphQLObjectType({
         return Location.find({});
       }
     },
+    rate: {
+      type: new GraphQLList(RatingsType),
+      resolve(parent, args) {
+        return Ratings.find({});
+      }
+    },
     users: {
       type: new GraphQLList(UserType),
       resolve(parent, args) {
@@ -279,9 +303,9 @@ const Mutation = new GraphQLObjectType({
     addUser: {
       type: UserType,
       args: {
-        cognitoUserId: { type: new GraphQLNonNull(GraphQLString1) },
-        fullName: { type: new GraphQLNonNull(GraphQLString1) },
-        email: { type: new GraphQLNonNull(GraphQLString1) },
+        cognitoUserId: { type: new GraphQLNonNull(GraphQLString) },
+        fullName: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
         homeBeach: { type: GraphQLID },
         homeBeachName: { type: GraphQLString },
         longitude: { type: GraphQLFloat },
@@ -316,7 +340,7 @@ const Mutation = new GraphQLObjectType({
     updateUser: {
       type: UserType,
       args: {
-        cognitoUserId: { type: new GraphQLNonNull(GraphQLString1) },
+        cognitoUserId: { type: new GraphQLNonNull(GraphQLString) },
         fullName: { type: GraphQLString },
         email: { type: GraphQLString },
         homeBeach: { type: GraphQLID },
