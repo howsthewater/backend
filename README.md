@@ -1,2 +1,2 @@
 # backend
-hows the water back-end repository
+hows the water backend repo for surfing and weather website
